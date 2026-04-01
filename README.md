@@ -19,13 +19,15 @@ without mixing their skill namespaces.
 
 ## Codex Install
 
-Install Superpowers first, then tell Codex:
+Install Superpowers first.
+
+This repo is part of the private E6 workspace. Tell Codex:
 
 ```text
-Fetch and follow instructions from https://raw.githubusercontent.com/nirmal-e6/e6-skills/refs/heads/main/.codex/INSTALL.md
+Clone git@github.com:nirmal-e6/e6-skills.git into ~/.codex/e6-skills and then follow ~/.codex/e6-skills/.codex/INSTALL.md
 ```
 
-That bootstrap installs the repo at `~/.codex/e6-skills`, exposes the Calcite
+The install flow clones the repo at `~/.codex/e6-skills`, exposes the Calcite
 pack as `~/.agents/skills/e6-calcite`, and prepares the local memory
 directories used by the Calcite brief workflows.
 

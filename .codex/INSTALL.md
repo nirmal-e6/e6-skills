@@ -3,6 +3,17 @@
 This installs the Calcite pack from `e6-skills` using Codex native skill
 discovery.
 
+This repository is private. Use a local checkout or clone with SSH or other
+authenticated GitHub access.
+
+## Codex Prompt
+
+Tell Codex:
+
+```text
+Clone git@github.com:nirmal-e6/e6-skills.git into ~/.codex/e6-skills and then follow ~/.codex/e6-skills/.codex/INSTALL.md
+```
+
 ## Prerequisites
 
 - Git
@@ -21,7 +32,7 @@ Fetch and follow instructions from https://raw.githubusercontent.com/obra/superp
    if [ -d ~/.codex/e6-skills/.git ]; then
      git -C ~/.codex/e6-skills pull --ff-only
    else
-     git clone https://github.com/nirmal-e6/e6-skills.git ~/.codex/e6-skills
+     git clone git@github.com:nirmal-e6/e6-skills.git ~/.codex/e6-skills
    fi
    ```
 
