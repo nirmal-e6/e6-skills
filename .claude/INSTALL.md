@@ -42,11 +42,15 @@ upstream Superpowers Claude instructions.
      ~/.e6/skills/artifacts/calcite/pr-briefs
    ```
 
-3. **Expose the Calcite pack to Claude Code:**
+3. **Expose each Calcite skill to Claude Code:**
    ```bash
    mkdir -p ~/.claude/skills
    rm -f ~/.claude/skills/e6-calcite
-   ln -s ~/.e6/skills/e6-skills/packs/calcite/skills ~/.claude/skills/e6-calcite
+   for skill in ~/.e6/skills/e6-skills/packs/calcite/skills/*; do
+     name=$(basename "$skill")
+     rm -rf "$HOME/.claude/skills/$name"
+     ln -s "$skill" "$HOME/.claude/skills/$name"
+   done
    ```
 
 4. **Restart Claude Code** so it re-discovers the installed skills.
@@ -54,7 +58,7 @@ upstream Superpowers Claude instructions.
 ## Verify
 
 ```bash
-ls -la ~/.claude/skills/e6-calcite
+ls -la ~/.claude/skills/calcite-pr-handoff
 ls -d ~/.e6/skills/artifacts/calcite/issue-briefs
 ls -d ~/.e6/skills/artifacts/calcite/pr-briefs
 ```
@@ -68,7 +72,7 @@ git -C ~/.e6/skills/e6-skills pull --ff-only
 ## Uninstalling
 
 ```bash
-rm ~/.claude/skills/e6-calcite
+rm -f ~/.claude/skills/calcite-*
 ```
 
 Optionally remove the shared clone and artifacts if no other agent uses them:

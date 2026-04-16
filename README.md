@@ -12,8 +12,11 @@ without mixing their skill namespaces.
 - E6 packs provide repo-specific routing, invariants, and durable artifacts.
 - Install one shared checkout at `~/.e6/skills/e6-skills`.
 - Agent-specific skill directories symlink to that checkout:
-  - Codex: `~/.agents/skills/e6-calcite`
-  - Claude Code: `~/.claude/skills/e6-calcite`
+  - Codex: `~/.agents/skills/e6-calcite` points at the Calcite pack
+    namespace.
+  - Claude Code: each `calcite-*` skill is symlinked directly under
+    `~/.claude/skills/`, because Claude Code expects a flat skill
+    directory layout.
 - Runtime briefs live in shared storage under `~/.e6/skills/artifacts/` so
   Codex and Claude sessions can hand work to each other without relying on chat
   history.
