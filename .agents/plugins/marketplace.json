@@ -1,0 +1,20 @@
+{
+  "name": "e6-skills",
+  "interface": {
+    "displayName": "E6 Skills"
+  },
+  "plugins": [
+    {
+      "name": "e6-calcite",
+      "source": {
+        "source": "local",
+        "path": "./plugins/e6-calcite"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

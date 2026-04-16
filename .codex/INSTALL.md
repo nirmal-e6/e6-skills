@@ -2,7 +2,7 @@
 
 This installs the Calcite pack from `e6-skills` using Codex native skill
 discovery while sharing the same source checkout and brief artifacts used by
-Claude Code.
+Claude Code and other agents.
 
 This repository is private. Use a local checkout or clone with SSH or other
 authenticated GitHub access.
@@ -45,7 +45,7 @@ Fetch and follow instructions from https://raw.githubusercontent.com/obra/superp
      ~/.e6/skills/artifacts/calcite/pr-briefs
    ```
 
-3. **Expose the Calcite pack to Codex:**
+3. **Expose the Calcite pack to Codex native skill discovery:**
    ```bash
    mkdir -p ~/.agents/skills
    rm -f ~/.agents/skills/e6-calcite
@@ -59,12 +59,30 @@ Fetch and follow instructions from https://raw.githubusercontent.com/obra/superp
 
 5. **Restart Codex** so it re-discovers the installed skills.
 
+## Codex Plugin Adapter
+
+The same pack is also packaged as a Codex plugin at:
+
+```text
+~/.e6/skills/e6-skills/plugins/e6-calcite/.codex-plugin/plugin.json
+```
+
+The repo includes a development marketplace at:
+
+```text
+~/.e6/skills/e6-skills/.agents/plugins/marketplace.json
+```
+
+Use the native skill symlink above for day-to-day local work. Use the plugin
+adapter when testing Codex plugin or marketplace flows.
+
 ## Verify
 
 ```bash
 ls -la ~/.agents/skills/e6-calcite
 ls -d ~/.e6/skills/artifacts/calcite/issue-briefs
 ls -d ~/.e6/skills/artifacts/calcite/pr-briefs
+test -f ~/.e6/skills/e6-skills/plugins/e6-calcite/.codex-plugin/plugin.json
 ```
 
 ## Updating
