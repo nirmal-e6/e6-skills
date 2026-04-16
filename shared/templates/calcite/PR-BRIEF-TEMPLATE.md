@@ -4,6 +4,8 @@
 - Branch:
 - Worktree path:
 - Date:
+- Last updated:
+- Active agent or owner:
 - JIRA or PR:
 
 ## Final Invariant
@@ -45,6 +47,17 @@
 - Main reasoning:
 - Behavior or compatibility notes:
 - Comments or naming choices that need reviewer attention:
+
+## Active Claims
+
+- Agent/tool:
+- Claimed files or surfaces:
+- Started:
+- Status:
+
+## Coordination Log
+
+- `YYYY-MM-DD HH:MM TZ` - `agent/tool` - change, claim, handoff, or blocker:
 
 ## Later-Session Review Summary
 

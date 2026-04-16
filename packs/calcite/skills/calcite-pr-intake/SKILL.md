@@ -17,6 +17,9 @@ briefs before implementation starts.
 - Treat external engines as evidence, not as default oracles. If engines
   disagree, stop and split the candidate into bug, compatibility, or
   discussion work.
+- Issue briefs are shared multi-agent artifacts. Preserve existing entries and
+  append timestamped coordination notes when another agent may resume the work.
+  Record active claims for files or surfaces when work is split across agents.
 
 ## Bring
 
@@ -44,8 +47,12 @@ briefs before implementation starts.
    - closest existing tests and fixtures
    - likely affected surfaces sharing the same mechanism
 6. Create or update an issue brief in
-   `$HOME/.codex/memories/e6-skills/calcite/issue-briefs/`
-   using `$HOME/.codex/e6-skills/packs/calcite/templates/ISSUE-BRIEF-TEMPLATE.md`.
+   `$HOME/.e6/skills/artifacts/calcite/issue-briefs/`
+   using
+   `$HOME/.e6/skills/e6-skills/shared/templates/calcite/ISSUE-BRIEF-TEMPLATE.md`.
+   If the brief already exists, re-read the latest file, update it in place,
+   and append a coordination-log entry instead of overwriting another agent's
+   notes.
    Derive and record:
    - candidate slug
    - default branch kind: `fix`, unless the work is explicitly exploratory

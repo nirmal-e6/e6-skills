@@ -16,6 +16,9 @@ review.
   readiness skill.
 - Pull forward the issue brief and the final impact map. Do not rely on chat
   history as the handoff artifact.
+- Briefs are shared multi-agent artifacts. Preserve existing entries and append
+  timestamped coordination notes when another agent may resume the work.
+  Record active claims for files or surfaces when work is split across agents.
 - Do not claim readiness without fresh verification evidence.
 - Preserve the final PR branch and worktree; this skill does not merge, discard,
   or prompt for finish-menu options.
@@ -52,8 +55,12 @@ review.
    scoped validation differently. If the clean build was not run or failed,
    report not ready.
 7. Create or update a PR brief in
-   `$HOME/.codex/memories/e6-skills/calcite/pr-briefs/`
-   using `$HOME/.codex/e6-skills/packs/calcite/templates/PR-BRIEF-TEMPLATE.md`.
+   `$HOME/.e6/skills/artifacts/calcite/pr-briefs/`
+   using
+   `$HOME/.e6/skills/e6-skills/shared/templates/calcite/PR-BRIEF-TEMPLATE.md`.
+   If the brief already exists, re-read the latest file, update it in place,
+   and append a coordination-log entry instead of overwriting another agent's
+   notes.
 8. End with a short later-session review summary:
    invariant, key touched surfaces, why it is correct, and deferred follow-ups.
 

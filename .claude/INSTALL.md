@@ -1,30 +1,27 @@
-# Installing E6 Calcite Skills For Codex
+# Installing E6 Calcite Skills For Claude Code
 
-This installs the Calcite pack from `e6-skills` using Codex native skill
+This installs the Calcite pack from `e6-skills` using Claude Code skill
 discovery while sharing the same source checkout and brief artifacts used by
-Claude Code.
+Codex.
 
 This repository is private. Use a local checkout or clone with SSH or other
 authenticated GitHub access.
 
-## Codex Prompt
+## Claude Prompt
 
-Tell Codex:
+Tell Claude Code:
 
 ```text
-Clone git@github.com:nirmal-e6/e6-skills.git into ~/.e6/skills/e6-skills and then follow ~/.e6/skills/e6-skills/.codex/INSTALL.md
+Clone git@github.com:nirmal-e6/e6-skills.git into ~/.e6/skills/e6-skills and then follow ~/.e6/skills/e6-skills/.claude/INSTALL.md
 ```
 
 ## Prerequisites
 
 - Git
-- Superpowers already installed for Codex
+- Superpowers already installed for Claude Code
 
-If Superpowers is not installed yet, first tell Codex:
-
-```text
-Fetch and follow instructions from https://raw.githubusercontent.com/obra/superpowers/refs/heads/main/.codex/INSTALL.md
-```
+If Superpowers is not installed yet, install it for Claude Code first using the
+upstream Superpowers Claude instructions.
 
 ## Installation
 
@@ -45,24 +42,19 @@ Fetch and follow instructions from https://raw.githubusercontent.com/obra/superp
      ~/.e6/skills/artifacts/calcite/pr-briefs
    ```
 
-3. **Expose the Calcite pack to Codex:**
+3. **Expose the Calcite pack to Claude Code:**
    ```bash
-   mkdir -p ~/.agents/skills
-   rm -f ~/.agents/skills/e6-calcite
-   ln -s ~/.e6/skills/e6-skills/packs/calcite/skills ~/.agents/skills/e6-calcite
+   mkdir -p ~/.claude/skills
+   rm -f ~/.claude/skills/e6-calcite
+   ln -s ~/.e6/skills/e6-skills/packs/calcite/skills ~/.claude/skills/e6-calcite
    ```
 
-4. **Remove the old Calcite namespace if you previously used it:**
-   ```bash
-   rm -f ~/.agents/skills/calcite-harness
-   ```
-
-5. **Restart Codex** so it re-discovers the installed skills.
+4. **Restart Claude Code** so it re-discovers the installed skills.
 
 ## Verify
 
 ```bash
-ls -la ~/.agents/skills/e6-calcite
+ls -la ~/.claude/skills/e6-calcite
 ls -d ~/.e6/skills/artifacts/calcite/issue-briefs
 ls -d ~/.e6/skills/artifacts/calcite/pr-briefs
 ```
@@ -76,7 +68,7 @@ git -C ~/.e6/skills/e6-skills pull --ff-only
 ## Uninstalling
 
 ```bash
-rm ~/.agents/skills/e6-calcite
+rm ~/.claude/skills/e6-calcite
 ```
 
 Optionally remove the shared clone and artifacts if no other agent uses them:

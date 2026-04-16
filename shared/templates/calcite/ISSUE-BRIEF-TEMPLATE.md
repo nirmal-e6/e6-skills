@@ -3,6 +3,8 @@
 - Candidate:
 - Candidate slug:
 - Date:
+- Last updated:
+- Active agent or owner:
 - Branch kind:
 - Branch name:
 - Base branch:
@@ -51,6 +53,17 @@
 - Smoke baseline command/result:
 - Targeted tests:
 - Broader checks:
+
+## Active Claims
+
+- Agent/tool:
+- Claimed files or surfaces:
+- Started:
+- Status:
+
+## Coordination Log
+
+- `YYYY-MM-DD HH:MM TZ` - `agent/tool` - change, claim, handoff, or blocker:
 
 ## Next Step
 
