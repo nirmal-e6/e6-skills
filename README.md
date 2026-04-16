@@ -74,6 +74,9 @@ append timestamped coordination notes instead of relying on chat history.
 ## Layout
 
 ```text
+.agents/plugins/marketplace.json  # Codex development marketplace
+.claude-plugin/marketplace.json   # Claude development marketplace
+Makefile                          # repo validation and packaging shortcuts
 packs/
   calcite/
     skills/                       # canonical Agent Skills source
@@ -85,8 +88,10 @@ plugins/
 shared/
   templates/
     calcite/
-.claude-plugin/marketplace.json   # Claude development marketplace
-.agents/plugins/marketplace.json  # Codex development marketplace
+scripts/
+  plugin_repo.py                  # validates and packages plugin adapters
+tests/
+  test_plugin_repo.py
 ```
 
 - `packs/<name>/skills/` contains canonical installable skills.
@@ -101,6 +106,30 @@ For a published, standalone plugin artifact, materialize the `skills` directory
 inside the artifact instead of shipping a symlink that depends on this checkout.
 For local development, the symlink keeps the plugin adapter and native skill
 install pointed at the same source files.
+
+## Repo Checks
+
+Run the standard library test suite and structural plugin validation:
+
+```bash
+make validate
+```
+
+Run Claude's plugin validator as well when Claude Code is installed:
+
+```bash
+make validate-claude
+```
+
+Build a self-contained plugin directory and archive under `dist/plugins/`:
+
+```bash
+make package
+```
+
+The package command materializes `plugins/e6-calcite/skills` into a real
+directory inside the artifact, so the release output does not depend on local
+symlink targets.
 
 ## Updating
 

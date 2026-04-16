@@ -19,6 +19,15 @@ The symlink is for local development from the shared checkout. If this plugin is
 published as a standalone artifact later, copy the canonical skill directories
 into the artifact so the plugin is self-contained.
 
+From the repo root, build that self-contained artifact with:
+
+```bash
+make package
+```
+
+The generated directory and `.tar.gz` archive are written under `dist/plugins/`
+and are intentionally ignored by git.
+
 ## Shared Runtime Artifacts
 
 Issue and PR briefs are not stored inside the plugin. They live under:
