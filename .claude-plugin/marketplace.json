@@ -8,10 +8,10 @@
   },
   "plugins": [
     {
-      "name": "e6-calcite",
-      "description": "Apache Calcite workflow, review, and durable handoff skills for E6 agents",
+      "name": "e6-skills",
+      "description": "Repo-specific E6 workflow, review, and durable handoff skills for coding agents",
       "version": "0.1.0",
-      "source": "./plugins/e6-calcite",
+      "source": "./plugins/e6-skills",
       "author": {
         "name": "E6"
       }

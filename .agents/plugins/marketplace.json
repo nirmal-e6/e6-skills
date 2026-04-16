@@ -5,10 +5,10 @@
   },
   "plugins": [
     {
-      "name": "e6-calcite",
+      "name": "e6-skills",
       "source": {
         "source": "local",
-        "path": "./plugins/e6-calcite"
+        "path": "./plugins/e6-skills"
       },
       "policy": {
         "installation": "AVAILABLE",

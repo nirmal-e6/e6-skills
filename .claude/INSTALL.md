@@ -1,8 +1,7 @@
-# Installing E6 Calcite Skills For Claude Code
+# Installing E6 Skills For Claude Code
 
-This installs the Calcite pack from `e6-skills` as a Claude Code plugin while
-sharing the same source checkout and brief artifacts used by Codex and other
-agents.
+This installs the shared `e6-skills` plugin for Claude Code. The plugin exposes
+the root `skills/` directory from the shared checkout.
 
 This repository is private. Use a local checkout or clone with SSH or other
 authenticated GitHub access.
@@ -44,18 +43,11 @@ upstream Superpowers Claude instructions.
 
 3. **Install the Claude Code plugin:**
 
-   In Claude Code, add this repo as a local marketplace and install the plugin:
+   In Claude Code:
 
    ```text
    /plugin marketplace add ~/.e6/skills/e6-skills
-   /plugin install e6-calcite@e6-skills
-   ```
-
-   For local development without marketplace installation, you can start Claude
-   Code with the plugin directory directly:
-
-   ```bash
-   claude --plugin-dir ~/.e6/skills/e6-skills/plugins/e6-calcite
+   /plugin install e6-skills@e6-skills
    ```
 
 4. **Reload plugins** after edits:
@@ -65,10 +57,10 @@ upstream Superpowers Claude instructions.
 
 ## Verify
 
-In Claude Code, verify that namespaced skills are available, for example:
+In Claude Code, verify that the namespaced skills are available:
 
 ```text
-/e6-calcite:calcite-pr-handoff
+/e6-skills:calcite-pr-handoff
 ```
 
 From the shell, verify shared storage exists:
@@ -86,33 +78,10 @@ git -C ~/.e6/skills/e6-skills pull --ff-only
 
 Then run `/reload-plugins` in Claude Code.
 
-## Legacy Personal-Skill Fallback
-
-For quick local testing without plugin namespacing, you can symlink skills into
-Claude Code's personal skill directory:
-
-```bash
-mkdir -p ~/.claude/skills
-for skill in ~/.e6/skills/e6-skills/packs/calcite/skills/*; do
-  name=$(basename "$skill")
-  rm -rf "$HOME/.claude/skills/$name"
-  ln -s "$skill" "$HOME/.claude/skills/$name"
-done
-```
-
-This exposes flat commands such as `/calcite-pr-handoff`. The plugin install is
-preferred for shared/team usage because it provides the `e6-calcite:` namespace.
-
 ## Uninstalling
 
-Use Claude Code's plugin manager to uninstall the plugin. If you used the
-legacy personal-skill fallback, remove those symlinks separately:
-
-```bash
-rm -f ~/.claude/skills/calcite-*
-```
-
-Optionally remove the shared clone and artifacts if no other agent uses them:
+Use Claude Code's plugin manager to uninstall `e6-skills`. Optionally remove
+the shared checkout and artifacts if no other agent uses them:
 
 ```bash
 rm -rf ~/.e6/skills/e6-skills

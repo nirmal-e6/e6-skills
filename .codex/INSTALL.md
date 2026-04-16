@@ -1,8 +1,7 @@
-# Installing E6 Calcite Skills For Codex
+# Installing E6 Skills For Codex
 
-This installs the Calcite pack from `e6-skills` using Codex native skill
-discovery while sharing the same source checkout and brief artifacts used by
-Claude Code and other agents.
+This installs the shared E6 skill namespace for Codex. Codex reads the root
+`skills/` directory from the shared checkout.
 
 This repository is private. Use a local checkout or clone with SSH or other
 authenticated GitHub access.
@@ -45,44 +44,28 @@ Fetch and follow instructions from https://raw.githubusercontent.com/obra/superp
      ~/.e6/skills/artifacts/calcite/pr-briefs
    ```
 
-3. **Expose the Calcite pack to Codex native skill discovery:**
+3. **Expose E6 skills to Codex native skill discovery:**
    ```bash
    mkdir -p ~/.agents/skills
-   rm -f ~/.agents/skills/e6-calcite
-   ln -s ~/.e6/skills/e6-skills/packs/calcite/skills ~/.agents/skills/e6-calcite
+   rm -f ~/.agents/skills/e6-skills
+   ln -s ~/.e6/skills/e6-skills/skills ~/.agents/skills/e6-skills
    ```
 
-4. **Remove the old Calcite namespace if you previously used it:**
+4. **Remove old E6 Calcite namespaces if present:**
    ```bash
+   rm -f ~/.agents/skills/e6-calcite
    rm -f ~/.agents/skills/calcite-harness
    ```
 
 5. **Restart Codex** so it re-discovers the installed skills.
 
-## Codex Plugin Adapter
-
-The same pack is also packaged as a Codex plugin at:
-
-```text
-~/.e6/skills/e6-skills/plugins/e6-calcite/.codex-plugin/plugin.json
-```
-
-The repo includes a development marketplace at:
-
-```text
-~/.e6/skills/e6-skills/.agents/plugins/marketplace.json
-```
-
-Use the native skill symlink above for day-to-day local work. Use the plugin
-adapter when testing Codex plugin or marketplace flows.
-
 ## Verify
 
 ```bash
-ls -la ~/.agents/skills/e6-calcite
+ls -la ~/.agents/skills/e6-skills
+test -f ~/.agents/skills/e6-skills/calcite-pr-handoff/SKILL.md
 ls -d ~/.e6/skills/artifacts/calcite/issue-briefs
 ls -d ~/.e6/skills/artifacts/calcite/pr-briefs
-test -f ~/.e6/skills/e6-skills/plugins/e6-calcite/.codex-plugin/plugin.json
 ```
 
 ## Updating
@@ -91,13 +74,15 @@ test -f ~/.e6/skills/e6-skills/plugins/e6-calcite/.codex-plugin/plugin.json
 git -C ~/.e6/skills/e6-skills pull --ff-only
 ```
 
+Restart Codex after adding or renaming skills.
+
 ## Uninstalling
 
 ```bash
-rm ~/.agents/skills/e6-calcite
+rm ~/.agents/skills/e6-skills
 ```
 
-Optionally remove the shared clone and artifacts if no other agent uses them:
+Optionally remove the shared checkout and artifacts if no other agent uses them:
 
 ```bash
 rm -rf ~/.e6/skills/e6-skills

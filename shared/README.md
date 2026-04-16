@@ -4,7 +4,7 @@ This directory contains assets shared by every supported agent runtime.
 
 ## Templates
 
-Templates live under `shared/templates/<pack>/` so skills can reference one
+Templates live under `shared/templates/<repo-slug>/` so skills can reference one
 stable repo path regardless of whether the caller is Codex, Claude Code, or a
 future agent.
 
@@ -14,7 +14,7 @@ Generated briefs do not live in this repo. The canonical shared artifact root
 is:
 
 ```text
-~/.e6/skills/artifacts/<pack>/
+~/.e6/skills/artifacts/<repo-slug>/
 ```
 
 For Calcite today:

@@ -1,31 +1,31 @@
 # E6 Skills
 
-E6 Skills is a versioned collection of repo-specific skill packs that layer on
-top of Superpowers.
+E6 Skills is the shared source of repo-specific skills for E6 coding agents.
 
-The first pack is Calcite. Future packs can live alongside it in this repo
-without mixing their skill namespaces.
+The repo intentionally has one install shape:
 
-## How It Fits Together
+- One shared checkout at `~/.e6/skills/e6-skills`.
+- One flat skill namespace under `skills/`.
+- One plugin adapter named `e6-skills` for plugin-aware agents.
+- Shared runtime briefs under `~/.e6/skills/artifacts/`.
 
-- Superpowers provides the base process layer.
-- E6 packs provide repo-specific routing, invariants, and durable artifacts.
-- Canonical skills live under `packs/<name>/skills/` using the Agent Skills
-  directory format.
-- Plugin-aware agents consume thin plugin adapters under `plugins/<name>/`.
-  The adapters point back to the canonical skill source instead of duplicating
-  `SKILL.md` files.
-- Runtime briefs live in shared storage under `~/.e6/skills/artifacts/` so
-  Claude, Codex, and other coding-agent sessions can hand work to each other
-  without relying on chat history.
+## Current Skills
 
-## Current Packs
+Calcite is the first supported repo. Its skills are root-level skill
+directories with `calcite-` prefixes, for example:
 
-- `calcite` -> Apache Calcite workflow and review skills
+```text
+skills/calcite-pr-handoff/
+skills/calcite-pr-intake/
+skills/calcite-query-support-check/
+```
 
-## Recommended Install Model
+Future repo skills should follow the same pattern with a repo prefix, for
+example `query-optimizer-pr-handoff`.
 
-Install one shared checkout for all agents:
+## Install
+
+Clone or update the shared checkout:
 
 ```bash
 mkdir -p ~/.e6/skills
@@ -36,100 +36,72 @@ else
 fi
 ```
 
-Then use the platform adapter for your agent:
+Then follow the adapter for the agent:
 
-- Claude Code: install `e6-calcite` from the repo marketplace in
-  `.claude-plugin/marketplace.json`; skills are invoked as
-  `/e6-calcite:<skill-name>`.
-- Codex: use native skill discovery via `~/.agents/skills/e6-calcite`, or use
-  the Codex plugin metadata at `plugins/e6-calcite/.codex-plugin/plugin.json`
-  when running through a plugin marketplace flow.
-- Other Agent Skills-compatible tools: point them at
-  `packs/calcite/skills/` or the `plugins/e6-calcite/skills` adapter,
-  depending on whether they support plugin namespaces.
-
-The plugin adapters are additive. They do not change the canonical
-`packs/calcite/skills/` source or Codex's native `~/.agents/skills/e6-calcite`
-install path.
-
-Agent-specific instructions:
-
-- Codex: `~/.e6/skills/e6-skills/.codex/INSTALL.md`
 - Claude Code: `~/.e6/skills/e6-skills/.claude/INSTALL.md`
+- Codex: `~/.e6/skills/e6-skills/.codex/INSTALL.md`
+
+The installed skill bodies always come from `~/.e6/skills/e6-skills/skills`.
 
 ## Shared Brief Storage
 
-Calcite issue and PR briefs are shared runtime artifacts, not Codex-only or
-Claude-only memory. Installers create:
+Generated issue and PR briefs do not live in this repo. They live under:
+
+```text
+~/.e6/skills/artifacts/<repo-slug>/
+```
+
+For Calcite today:
 
 ```text
 ~/.e6/skills/artifacts/calcite/issue-briefs/
 ~/.e6/skills/artifacts/calcite/pr-briefs/
 ```
 
-Briefs should be named by candidate, branch, or PR slug. When multiple agents
-work on the same item, update the existing brief, preserve prior entries, and
-append timestamped coordination notes instead of relying on chat history.
+When multiple agents work on the same item, update the existing brief, preserve
+prior entries, and append timestamped coordination notes instead of relying on
+chat history.
 
 ## Layout
 
 ```text
 .agents/plugins/marketplace.json  # Codex development marketplace
 .claude-plugin/marketplace.json   # Claude development marketplace
-Makefile                          # repo validation and packaging shortcuts
-packs/
-  calcite/
-    skills/                       # canonical Agent Skills source
+.claude/INSTALL.md                # Claude install adapter
+.codex/INSTALL.md                 # Codex install adapter
+Makefile                          # validation shortcuts
 plugins/
-  e6-calcite/
-    .claude-plugin/plugin.json    # Claude Code plugin adapter
-    .codex-plugin/plugin.json     # Codex plugin adapter
-    skills -> ../../packs/calcite/skills
+  e6-skills/
+    .claude-plugin/plugin.json
+    .codex-plugin/plugin.json
+    skills -> ../../skills
 shared/
   templates/
     calcite/
-scripts/
-  plugin_repo.py                  # validates and packages plugin adapters
-tests/
-  test_plugin_repo.py
+skills/
+  calcite-pr-handoff/
+  calcite-pr-intake/
 ```
 
-- `packs/<name>/skills/` contains canonical installable skills.
-- `plugins/<name>/` contains platform plugin manifests and symlinks back to the
-  canonical skill source.
-- `shared/templates/<name>/` contains reusable templates and reference assets
-  that are not tied to one agent runtime.
-- Generated runtime artifacts do not live in git; they go under
-  `~/.e6/skills/artifacts/<pack>/`.
+Use this rule for new repos:
 
-For a published, standalone plugin artifact, materialize the `skills` directory
-inside the artifact instead of shipping a symlink that depends on this checkout.
-For local development, the symlink keeps the plugin adapter and native skill
-install pointed at the same source files.
+- Add skill directories under `skills/` with a repo prefix.
+- Add shared templates under `shared/templates/<repo-slug>/` when needed.
+- Add runtime brief directories under `~/.e6/skills/artifacts/<repo-slug>/`.
+- Do not create a new plugin per repo unless the repo genuinely needs separate
+  install or permission boundaries.
 
-## Repo Checks
-
-Run the standard library test suite and structural plugin validation:
+## Validate
 
 ```bash
 make validate
 ```
 
-Run Claude's plugin validator as well when Claude Code is installed:
+When Claude Code is installed, also run:
 
 ```bash
 make validate-claude
 ```
-
-Build a self-contained plugin directory and archive under `dist/plugins/`:
-
-```bash
-make package
-```
-
-The package command materializes `plugins/e6-calcite/skills` into a real
-directory inside the artifact, so the release output does not depend on local
-symlink targets.
 
 ## Updating
 
@@ -137,12 +109,5 @@ symlink targets.
 git -C ~/.e6/skills/e6-skills pull --ff-only
 ```
 
-Restart Codex after adding a new native skill namespace. In Claude Code, run
-`/reload-plugins` after plugin changes, or restart Claude Code if the plugin was
-newly installed.
-
-## Local Development
-
-This repository is the source of truth. For local development, point
-`~/.e6/skills/e6-skills` at this checkout or push changes here and pull them
-from the shared install checkout.
+Restart Codex after adding or renaming skills. In Claude Code, run
+`/reload-plugins` after plugin changes.

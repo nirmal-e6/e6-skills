@@ -1,6 +1,6 @@
 {
-  "name": "e6-calcite",
-  "description": "Apache Calcite workflow, review, and durable handoff skills for E6 agents",
+  "name": "e6-skills",
+  "description": "Repo-specific E6 workflow, review, and durable handoff skills for coding agents",
   "version": "0.1.0",
   "author": {
     "name": "E6"
@@ -10,7 +10,7 @@
   "license": "Proprietary",
   "keywords": [
     "e6",
-    "calcite",
+    "repo-workflows",
     "skills",
     "workflow",
     "review"
