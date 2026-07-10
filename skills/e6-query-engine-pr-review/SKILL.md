@@ -52,16 +52,25 @@ reviewed change, posting, approving, or merging requires separate authorization.
 
 ## Output And Stop Contract
 
-Return the final review inside one concise, copy-ready fenced `markdown` block,
-with no review text outside it. Do not split it across fences or nest fenced
-code inside it; use inline code or indentation for snippets. Number actionable
-findings `1.`, `2.`, `3.` in severity order. For each, include a GitHub-usable
-repository-relative location, semantic consequence, direct ask, and verification
-status when relevant; do not force empty labels or repeat the analysis narrative.
+For one repository, return the final review inside one concise, copy-ready
+fenced `markdown` block. For a review spanning repositories, return one such
+block per repository, labeled by repository or PR outside the fence. Keep each
+block self-contained: include only that repository's findings and applicable
+source-state limits, validation, dependency asks, and residual risk. Reset
+finding numbering in each block. Preserve the coherent cross-repository analysis;
+place a cross-repository issue in the block for every repository whose PR must
+act on it, stated from that repository's perspective.
+
+Do not put review prose outside the copy blocks, split one repository's review
+across fences, or nest fenced code inside a block; use inline code or indentation
+for snippets. Number actionable findings `1.`, `2.`, `3.` in severity order. For
+each, include a GitHub-usable repository-relative location, semantic consequence,
+direct ask, and verification status when relevant; do not force empty labels or
+repeat the analysis narrative.
 
 After the findings, include only applicable source-state limits, open questions,
-validation gaps, and residual risk. If there are no findings, say so in the same
-single block and name what remains untested or unavailable. Follow a different
+validation gaps, and residual risk. If a repository has no findings, say so in
+its block and name what remains untested or unavailable. Follow a different
 format only when the user requests one. Stop after the review report unless
 implementation or external review actions were separately requested.
 

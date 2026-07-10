@@ -615,7 +615,37 @@
         "review-one-coherent-change-set",
         "map-changed-contract-consumers",
         "analyze-merge-dependencies",
-        "bounded-context-expansion"
+        "bounded-context-expansion",
+        "one-copy-ready-block-per-repository",
+        "group-findings-by-repository",
+        "keep-repository-blocks-self-contained",
+        "preserve-coherent-cross-repository-analysis"
+      ]
+    },
+    {
+      "id": "e6-review-positive-multi-repo-copy-ready-output",
+      "case_type": "positive",
+      "prompt": "Review paired e6-calcite and query-optimizer PRs as one feature, including their dependency and merge order. Return the final review as separate GitHub comments I can copy: one copy window for e6-calcite containing its findings and one for query-optimizer containing its findings.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "e6-query-engine-pr-review"
+      },
+      "allowed_composing_skills": [
+        "e6-query-engine-context"
+      ],
+      "forbidden_skills": [
+        "calcite-pr-intake",
+        "calcite-pr-handoff",
+        "e6-query-engine-coordination"
+      ],
+      "expected_behavior_tags": [
+        "review-one-coherent-change-set",
+        "one-copy-ready-block-per-repository",
+        "group-findings-by-repository",
+        "reset-numbering-per-repository",
+        "keep-repository-blocks-self-contained",
+        "place-cross-repository-asks-with-each-required-owner",
+        "no-review-prose-outside-copy-blocks"
       ]
     },
     {
