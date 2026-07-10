@@ -1,6 +1,7 @@
 # E6 Skills
 
-E6 Skills is the shared source of repo-specific skills for E6 coding agents.
+E6 Skills is the shared source of capability-oriented query-engine and Calcite
+skills for E6 coding agents.
 
 The repo intentionally has one install shape:
 
@@ -11,8 +12,21 @@ The repo intentionally has one install shape:
 
 ## Current Skills
 
-Calcite is the first supported repo. Its skills are root-level skill
-directories with `calcite-` prefixes, for example:
+The broad E6 query-engine portfolio is:
+
+- `e6-query-engine-context` for bounded, current-code context discovery
+- `e6-query-engine-pr-review` for coherent existing change-set review
+- `e6-query-engine-diagnosis` for unknown or cross-engine symptoms
+- `e6-query-engine-optimization` for evidenced performance investigation and design
+- `e6-query-engine-coordination` for dependent outcomes needing reconciliation
+
+The context skill progressively discloses code-grounded references for the
+planner/Calcite seam, plan lowering, executor consumers, state, generation,
+topology, and evidence handling. Workflow skills compose with it only when the
+current mechanism crosses those boundaries.
+
+Existing Calcite skills remain the deeper specialized lenses for proven Calcite
+work. They are root-level directories with `calcite-` prefixes, for example:
 
 ```text
 skills/calcite-pr-handoff/
@@ -20,8 +34,9 @@ skills/calcite-pr-intake/
 skills/calcite-query-support-check/
 ```
 
-Future repo skills should follow the same pattern with a repo prefix, for
-example `query-optimizer-pr-handoff`.
+Skills are named for repeatable capabilities and lifecycle outcomes, not split
+repositories or monorepo paths. When no specialized skill clearly applies, use
+native reasoning instead of forcing the nearest workflow.
 
 ## Install
 
@@ -79,13 +94,18 @@ shared/
   templates/
     calcite/
 skills/
+  e6-query-engine-context/
+    references/
+  e6-query-engine-diagnosis/
+  e6-query-engine-pr-review/
   calcite-pr-handoff/
   calcite-pr-intake/
 ```
 
-Use this rule for new repos:
+Use these rules for future additions:
 
-- Add skill directories under `skills/` with a repo prefix.
+- Add a skill only for a distinct, recurring capability with routing evidence.
+- Keep detailed shared context behind selectively loaded references.
 - Add shared templates under `shared/templates/<repo-slug>/` when needed.
 - Add runtime brief directories under `~/.e6/skills/artifacts/<repo-slug>/`.
 - Do not create a new plugin per repo unless the repo genuinely needs separate
@@ -95,6 +115,19 @@ Use this rule for new repos:
 
 ```bash
 make validate
+```
+
+This checks the plugin JSON and skill symlink, runs the standard-library
+validator tests, validates every `skills/*/SKILL.md`, and validates the
+versioned routing corpus at `evaluations/routing/v1.json`. The corpus records
+realistic prompts with expected primary or no-specialized-skill routing,
+allowed composition, forbidden collisions, and expected behavior tags for
+semantic evaluation.
+
+Run only the focused validator tests with:
+
+```bash
+python3 -m unittest discover -s tests -v
 ```
 
 When Claude Code is installed, also run:

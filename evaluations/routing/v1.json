@@ -1,0 +1,1140 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "id": "bug-root-cause-positive-regression",
+      "case_type": "positive",
+      "prompt": "A Calcite validator regression now resolves a correlated field to the wrong scope. Prove which layer owns the defect, identify the source-level fix point, and reject a validator-test-only workaround before coding.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "calcite-bug-root-cause"
+      },
+      "allowed_composing_skills": [],
+      "forbidden_skills": [
+        "calcite-pr-handoff",
+        "calcite-pr-intake",
+        "calcite-query-support-check",
+        "e6-query-engine-context",
+        "e6-query-engine-pr-review",
+        "e6-query-engine-diagnosis",
+        "e6-query-engine-optimization",
+        "e6-query-engine-coordination"
+      ],
+      "expected_behavior_tags": [
+        "minimize-reproducer",
+        "prove-owning-layer",
+        "state-violated-invariant",
+        "reject-symptom-patches"
+      ]
+    },
+    {
+      "id": "change-impact-map-positive-helper-change",
+      "case_type": "positive",
+      "prompt": "The proposed Calcite patch changes a shared row-type naming helper. Audit sibling call sites, dependent output surfaces, conformance gates, preserved invariants, and focused validation before the patch is called complete.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "calcite-change-impact-map"
+      },
+      "allowed_composing_skills": [],
+      "forbidden_skills": [
+        "calcite-bug-root-cause",
+        "calcite-pr-handoff"
+      ],
+      "expected_behavior_tags": [
+        "name-changed-mechanism",
+        "search-sibling-sites",
+        "map-dependent-surfaces",
+        "record-inspected-deferred-surfaces"
+      ]
+    },
+    {
+      "id": "function-operator-positive-new-callable-surface",
+      "case_type": "positive",
+      "prompt": "Add a Calcite JSON_VALUE-style operator with explicit legal and illegal calls, return typing, null behavior, and Babel-only availability. Define the contract and extension point before implementation.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "calcite-function-or-operator-work"
+      },
+      "allowed_composing_skills": [],
+      "forbidden_skills": [
+        "calcite-optimization-or-rule-work",
+        "calcite-pr-intake",
+        "calcite-query-support-check"
+      ],
+      "expected_behavior_tags": [
+        "classify-function-work",
+        "define-semantic-contract",
+        "identify-owning-layers",
+        "record-dialect-gating"
+      ]
+    },
+    {
+      "id": "optimization-rule-positive-transform",
+      "case_type": "positive",
+      "prompt": "Design a Calcite planner rule that removes a redundant aggregate only when uniqueness metadata proves the rewrite safe. State preconditions, preserved semantics, expected plan shape, and rule-interaction risks.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "calcite-optimization-or-rule-work"
+      },
+      "allowed_composing_skills": [],
+      "forbidden_skills": [
+        "calcite-function-or-operator-work",
+        "calcite-query-support-check"
+      ],
+      "expected_behavior_tags": [
+        "justify-planner-ownership",
+        "define-transform-preconditions",
+        "state-preserved-semantics",
+        "audit-rule-interactions"
+      ]
+    },
+    {
+      "id": "pr-handoff-positive-readiness",
+      "case_type": "positive",
+      "prompt": "The Calcite patch is implemented and its focused tests pass. Build durable later-session review context, audit the final diff and touched expectations, run fresh readiness verification, and recommend ready, needs fixes, or split.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "calcite-pr-handoff"
+      },
+      "allowed_composing_skills": [],
+      "forbidden_skills": [
+        "calcite-pr-intake",
+        "calcite-query-support-check"
+      ],
+      "expected_behavior_tags": [
+        "audit-coherent-pr-scope",
+        "audit-reviewer-risk",
+        "run-fresh-verification",
+        "produce-readiness-recommendation"
+      ]
+    },
+    {
+      "id": "pr-intake-positive-symptom-batch",
+      "case_type": "positive",
+      "prompt": "Classify this batch of four Calcite SQL failures into PR-sized candidates, separate bugs from compatibility questions, name an owner hypothesis for each, and create durable issue-brief inputs before any coding.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "calcite-pr-intake"
+      },
+      "allowed_composing_skills": [],
+      "forbidden_skills": [
+        "calcite-pr-handoff"
+      ],
+      "expected_behavior_tags": [
+        "decompose-candidates",
+        "classify-each-candidate",
+        "name-owner-hypotheses",
+        "record-split-decisions"
+      ]
+    },
+    {
+      "id": "query-support-positive-stage-verdict",
+      "case_type": "positive",
+      "prompt": "Does SELECT * EXCEPT work in current Calcite under Babel, and if not, which stage rejects it first? Give the current support verdict and nearest harness only; do not implement anything.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "calcite-query-support-check"
+      },
+      "allowed_composing_skills": [],
+      "forbidden_skills": [
+        "calcite-bug-root-cause",
+        "calcite-function-or-operator-work",
+        "calcite-optimization-or-rule-work",
+        "calcite-pr-intake"
+      ],
+      "expected_behavior_tags": [
+        "inspect-current-code-and-tests",
+        "classify-stage-by-stage",
+        "identify-first-failing-stage",
+        "stop-after-support-verdict"
+      ]
+    },
+    {
+      "id": "bug-root-cause-negative-support-question",
+      "case_type": "negative",
+      "prompt": "I only need to know whether this SQL parses and validates in current Calcite with default conformance. Do not diagnose or patch it.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "calcite-query-support-check"
+      },
+      "allowed_composing_skills": [],
+      "forbidden_skills": [
+        "calcite-bug-root-cause"
+      ],
+      "expected_behavior_tags": [
+        "classify-stage-by-stage",
+        "stop-after-support-verdict"
+      ],
+      "notes": "Negative trigger case for calcite-bug-root-cause: no claim that behavior is wrong or regressed."
+    },
+    {
+      "id": "change-impact-map-negative-raw-intake",
+      "case_type": "negative",
+      "prompt": "Here are six unrelated Calcite failures from review. Classify and split them before deciding whether any patch exists.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "calcite-pr-intake"
+      },
+      "allowed_composing_skills": [],
+      "forbidden_skills": [
+        "calcite-change-impact-map"
+      ],
+      "expected_behavior_tags": [
+        "decompose-candidates",
+        "classify-each-candidate",
+        "defer-patch-completeness-audit"
+      ],
+      "notes": "Negative trigger case for calcite-change-impact-map: there is no changed mechanism yet."
+    },
+    {
+      "id": "function-operator-negative-planner-rule",
+      "case_type": "negative",
+      "prompt": "A Calcite join-reordering rule produces a worse plan under a specific trait set. Define the planner transformation contract and interaction risks; no callable SQL surface is changing.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "calcite-optimization-or-rule-work"
+      },
+      "allowed_composing_skills": [],
+      "forbidden_skills": [
+        "calcite-function-or-operator-work"
+      ],
+      "expected_behavior_tags": [
+        "justify-planner-ownership",
+        "state-preserved-semantics",
+        "audit-rule-interactions"
+      ]
+    },
+    {
+      "id": "optimization-rule-negative-function-contract",
+      "case_type": "negative",
+      "prompt": "Add a dialect-gated scalar function to Calcite and define its operand, return-type, and null semantics. There is no relational transformation or bad-plan investigation.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "calcite-function-or-operator-work"
+      },
+      "allowed_composing_skills": [],
+      "forbidden_skills": [
+        "calcite-optimization-or-rule-work"
+      ],
+      "expected_behavior_tags": [
+        "define-semantic-contract",
+        "record-dialect-gating",
+        "identify-extension-point"
+      ]
+    },
+    {
+      "id": "pr-handoff-negative-untriaged-symptoms",
+      "case_type": "negative",
+      "prompt": "These new Calcite SQL symptoms have not been classified and there is no patch or branch. Split them into candidates and identify likely owners.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "calcite-pr-intake"
+      },
+      "allowed_composing_skills": [],
+      "forbidden_skills": [
+        "calcite-pr-handoff"
+      ],
+      "expected_behavior_tags": [
+        "decompose-candidates",
+        "name-owner-hypotheses",
+        "defer-readiness-audit"
+      ]
+    },
+    {
+      "id": "pr-intake-negative-single-support-verdict",
+      "case_type": "negative",
+      "prompt": "Check one SQL statement against current Calcite and tell me only the first failing stage and whether it is supported. No candidate queue or issue brief is needed.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "calcite-query-support-check"
+      },
+      "allowed_composing_skills": [],
+      "forbidden_skills": [
+        "calcite-pr-intake"
+      ],
+      "expected_behavior_tags": [
+        "identify-first-failing-stage",
+        "stop-after-support-verdict"
+      ]
+    },
+    {
+      "id": "query-support-negative-final-patch",
+      "case_type": "negative",
+      "prompt": "Review the completed Calcite patch for final readiness, preserve its invariant and impact-map context for the next session, and record fresh verification results.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "calcite-pr-handoff"
+      },
+      "allowed_composing_skills": [],
+      "forbidden_skills": [
+        "calcite-query-support-check"
+      ],
+      "expected_behavior_tags": [
+        "audit-reviewer-risk",
+        "run-fresh-verification",
+        "produce-readiness-recommendation"
+      ]
+    },
+    {
+      "id": "bug-root-cause-sibling-impact-map",
+      "case_type": "sibling-overlap",
+      "prompt": "Current Calcite behavior regressed. First prove the owning layer and source fix, then map every sibling surface and validation affected by that same mechanism before implementation.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "calcite-bug-root-cause"
+      },
+      "allowed_composing_skills": [
+        "calcite-change-impact-map"
+      ],
+      "forbidden_skills": [
+        "calcite-query-support-check"
+      ],
+      "expected_behavior_tags": [
+        "prove-root-cause-before-impact-audit",
+        "reject-symptom-patches",
+        "map-affected-surfaces"
+      ]
+    },
+    {
+      "id": "change-impact-map-sibling-root-cause-handoff",
+      "case_type": "sibling-overlap",
+      "prompt": "The Calcite root cause and fix point are already proven, but implementation has not started. Audit the proposed helper change across sibling sites, observable surfaces, gates, and preserved invariants; this is not final PR readiness.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "calcite-change-impact-map"
+      },
+      "allowed_composing_skills": [],
+      "forbidden_skills": [
+        "calcite-bug-root-cause",
+        "calcite-pr-handoff"
+      ],
+      "expected_behavior_tags": [
+        "accept-proven-fix-point",
+        "audit-changed-mechanism",
+        "map-gates-and-tests",
+        "defer-final-readiness"
+      ]
+    },
+    {
+      "id": "function-operator-sibling-impact-map",
+      "case_type": "sibling-overlap",
+      "prompt": "Define a new Calcite aggregate function's semantic contract, ownership, and conformance gate, then audit sibling aggregates and dependent validation surfaces before coding.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "calcite-function-or-operator-work"
+      },
+      "allowed_composing_skills": [
+        "calcite-change-impact-map"
+      ],
+      "forbidden_skills": [
+        "calcite-optimization-or-rule-work"
+      ],
+      "expected_behavior_tags": [
+        "define-function-contract-before-impact-audit",
+        "record-conformance-gating",
+        "map-sibling-operators"
+      ]
+    },
+    {
+      "id": "optimization-rule-sibling-impact-map",
+      "case_type": "sibling-overlap",
+      "prompt": "A planner-owned Calcite rewrite needs new preconditions. Define its preserved invariant and interaction risks, then inspect sibling rules and plan-output surfaces sharing the mechanism.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "calcite-optimization-or-rule-work"
+      },
+      "allowed_composing_skills": [
+        "calcite-change-impact-map"
+      ],
+      "forbidden_skills": [
+        "calcite-function-or-operator-work"
+      ],
+      "expected_behavior_tags": [
+        "define-planner-contract-before-impact-audit",
+        "audit-rule-interactions",
+        "map-plan-output-surfaces"
+      ]
+    },
+    {
+      "id": "pr-handoff-sibling-impact-map",
+      "case_type": "sibling-overlap",
+      "prompt": "The Calcite PR is nearly final. Pull its completed impact map into a durable handoff, inspect reviewer-risk and expectation fallout, rerun required verification, and issue the final readiness recommendation.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "calcite-pr-handoff"
+      },
+      "allowed_composing_skills": [
+        "calcite-change-impact-map"
+      ],
+      "forbidden_skills": [
+        "calcite-pr-intake"
+      ],
+      "expected_behavior_tags": [
+        "pull-final-impact-map",
+        "audit-touched-surface-fallout",
+        "run-fresh-verification",
+        "produce-readiness-recommendation"
+      ]
+    },
+    {
+      "id": "pr-intake-sibling-support-check",
+      "case_type": "sibling-overlap",
+      "prompt": "Triage a list of Calcite SQL reports into separate candidates. Some may be support checks only, so classify the batch first and allow stage-by-stage support verdicts without turning every row into a bug.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "calcite-pr-intake"
+      },
+      "allowed_composing_skills": [
+        "calcite-query-support-check"
+      ],
+      "forbidden_skills": [
+        "calcite-pr-handoff"
+      ],
+      "expected_behavior_tags": [
+        "decompose-before-support-checks",
+        "classify-support-only-candidates",
+        "avoid-assuming-every-symptom-is-a-bug"
+      ]
+    },
+    {
+      "id": "query-support-sibling-root-cause",
+      "case_type": "sibling-overlap",
+      "prompt": "First determine whether this exact SQL is supported by current Calcite and which stage fails. If the evidence shows existing behavior regressed, continue by identifying the owning layer and real fix point.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "calcite-query-support-check"
+      },
+      "allowed_composing_skills": [
+        "calcite-bug-root-cause"
+      ],
+      "forbidden_skills": [
+        "calcite-pr-handoff"
+      ],
+      "expected_behavior_tags": [
+        "establish-support-verdict-first",
+        "identify-first-failing-stage",
+        "enter-root-cause-only-if-behavior-looks-wrong"
+      ]
+    },
+    {
+      "id": "no-specialized-skill-calcite-doc-typo",
+      "case_type": "negative",
+      "prompt": "Fix a spelling error in a Calcite README sentence. There is no SQL behavior change, patch-completeness audit, symptom triage, or PR handoff request.",
+      "expected_routing": {
+        "kind": "no-specialized-skill"
+      },
+      "allowed_composing_skills": [],
+      "forbidden_skills": [
+        "calcite-bug-root-cause",
+        "calcite-change-impact-map",
+        "calcite-function-or-operator-work",
+        "calcite-optimization-or-rule-work",
+        "calcite-pr-handoff",
+        "calcite-pr-intake",
+        "calcite-query-support-check",
+        "e6-query-engine-context",
+        "e6-query-engine-pr-review",
+        "e6-query-engine-diagnosis",
+        "e6-query-engine-optimization",
+        "e6-query-engine-coordination"
+      ],
+      "expected_behavior_tags": [
+        "use-native-reasoning",
+        "avoid-forcing-specialized-workflow"
+      ]
+    },
+    {
+      "id": "no-specialized-skill-non-calcite-task",
+      "case_type": "negative",
+      "prompt": "Adjust the spacing of a navigation button in a small web application and verify the relevant frontend test.",
+      "expected_routing": {
+        "kind": "no-specialized-skill"
+      },
+      "allowed_composing_skills": [],
+      "forbidden_skills": [
+        "calcite-bug-root-cause",
+        "calcite-change-impact-map",
+        "calcite-function-or-operator-work",
+        "calcite-optimization-or-rule-work",
+        "calcite-pr-handoff",
+        "calcite-pr-intake",
+        "calcite-query-support-check",
+        "e6-query-engine-context",
+        "e6-query-engine-pr-review",
+        "e6-query-engine-diagnosis",
+        "e6-query-engine-optimization",
+        "e6-query-engine-coordination"
+      ],
+      "expected_behavior_tags": [
+        "use-native-reasoning",
+        "avoid-calcite-skill-collision"
+      ]
+    },
+    {
+      "id": "e6-context-positive-cross-component-explanation",
+      "case_type": "positive",
+      "prompt": "Explain how an optimized RelNode becomes an executor plan in E6 and where Java and native execution diverge. Start from current symbols, follow only the relevant lowering and serialization edges, and label anything not proved by source.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "e6-query-engine-context"
+      },
+      "allowed_composing_skills": [],
+      "forbidden_skills": [
+        "calcite-change-impact-map",
+        "calcite-optimization-or-rule-work"
+      ],
+      "expected_behavior_tags": [
+        "bounded-context-expansion",
+        "follow-observed-producer-consumer-edges",
+        "label-observed-inference-hypothesis",
+        "revalidate-current-code"
+      ]
+    },
+    {
+      "id": "e6-context-positive-split-repo-topology",
+      "case_type": "positive",
+      "prompt": "Map the current E6 planner-to-executor contract using the split query-optimizer, planner-interface, Java executor, and native executor repositories. Do not read unrelated engine components or assume a complete architecture mirror.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "e6-query-engine-context"
+      },
+      "allowed_composing_skills": [],
+      "forbidden_skills": [],
+      "expected_behavior_tags": [
+        "bounded-context-expansion",
+        "use-logical-component-identities",
+        "split-repos-authoritative-until-cutover",
+        "stop-at-justified-boundary"
+      ]
+    },
+    {
+      "id": "e6-context-positive-monorepo-equivalent",
+      "case_type": "positive",
+      "prompt": "Map the same planner-to-executor contract from an e6-query-engine checkout, but verify each monorepo component against the authoritative split source before relying on it and keep the reasoning independent of repository layout.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "e6-query-engine-context"
+      },
+      "allowed_composing_skills": [],
+      "forbidden_skills": [],
+      "expected_behavior_tags": [
+        "bounded-context-expansion",
+        "use-logical-component-identities",
+        "revalidate-monorepo-copy",
+        "split-repos-authoritative-until-cutover"
+      ],
+      "notes": "Topology-equivalent counterpart to e6-context-positive-split-repo-topology."
+    },
+    {
+      "id": "e6-context-negative-narrow-documentation",
+      "case_type": "negative",
+      "prompt": "Correct punctuation in a query-optimizer Markdown paragraph. No code symbol, cross-component contract, semantic behavior, or broader engine explanation is involved.",
+      "expected_routing": {
+        "kind": "no-specialized-skill"
+      },
+      "allowed_composing_skills": [],
+      "forbidden_skills": [
+        "e6-query-engine-context",
+        "e6-query-engine-pr-review",
+        "e6-query-engine-diagnosis",
+        "e6-query-engine-optimization",
+        "e6-query-engine-coordination"
+      ],
+      "expected_behavior_tags": [
+        "use-native-reasoning",
+        "avoid-unnecessary-context-expansion",
+        "open-world-fallback"
+      ]
+    },
+    {
+      "id": "e6-review-positive-qo-change",
+      "case_type": "positive",
+      "prompt": "Review an existing query-optimizer PR for semantic regressions, wrong Calcite-versus-QO ownership, fallback behavior, and missing risk-shaped tests. Report findings only and recheck any author corrections.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "e6-query-engine-pr-review"
+      },
+      "allowed_composing_skills": [
+        "e6-query-engine-context"
+      ],
+      "forbidden_skills": [
+        "calcite-pr-intake",
+        "calcite-pr-handoff"
+      ],
+      "expected_behavior_tags": [
+        "findings-first-review",
+        "verify-source-state",
+        "owner-first-reasoning",
+        "risk-shaped-tests",
+        "recheck-corrections"
+      ]
+    },
+    {
+      "id": "e6-review-positive-multi-pr-contract",
+      "case_type": "positive",
+      "prompt": "Review the planner, planner-interface, Java executor, and native executor PRs as one existing feature. Determine the changed contract, artifact consumers, merge dependencies, and semantic gaps instead of producing four isolated reviews.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "e6-query-engine-pr-review"
+      },
+      "allowed_composing_skills": [
+        "e6-query-engine-context"
+      ],
+      "forbidden_skills": [
+        "calcite-pr-intake",
+        "calcite-pr-handoff"
+      ],
+      "expected_behavior_tags": [
+        "findings-first-review",
+        "review-one-coherent-change-set",
+        "map-changed-contract-consumers",
+        "analyze-merge-dependencies",
+        "bounded-context-expansion"
+      ]
+    },
+    {
+      "id": "e6-review-sibling-context-secondary",
+      "case_type": "sibling-overlap",
+      "prompt": "Review a QO diff that changes planner-interface lowering. Use broader engine context only to follow the changed serialization and executor-consumer edges; the requested outcome remains a severity-ordered review.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "e6-query-engine-pr-review"
+      },
+      "allowed_composing_skills": [
+        "e6-query-engine-context"
+      ],
+      "forbidden_skills": [
+        "calcite-change-impact-map"
+      ],
+      "expected_behavior_tags": [
+        "findings-first-review",
+        "context-is-secondary-lens",
+        "map-changed-contract-consumers",
+        "stop-at-justified-boundary"
+      ]
+    },
+    {
+      "id": "e6-review-negative-narrow-implementation",
+      "case_type": "negative",
+      "prompt": "Implement an already-designed local query-optimizer helper rename and run its focused tests. No review, semantic investigation, cross-component contract, or readiness audit was requested.",
+      "expected_routing": {
+        "kind": "no-specialized-skill"
+      },
+      "allowed_composing_skills": [],
+      "forbidden_skills": [
+        "e6-query-engine-context",
+        "e6-query-engine-pr-review",
+        "e6-query-engine-diagnosis",
+        "e6-query-engine-optimization",
+        "e6-query-engine-coordination"
+      ],
+      "expected_behavior_tags": [
+        "use-native-reasoning",
+        "avoid-review-workflow-for-implementation"
+      ]
+    },
+    {
+      "id": "e6-review-negative-calcite-intake",
+      "case_type": "negative",
+      "prompt": "These unimplemented Calcite SQL symptoms need classification and splitting into PR-sized candidates before coding. There is no existing E6 diff or PR to review.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "calcite-pr-intake"
+      },
+      "allowed_composing_skills": [],
+      "forbidden_skills": [
+        "e6-query-engine-pr-review"
+      ],
+      "expected_behavior_tags": [
+        "decompose-candidates",
+        "defer-existing-change-review"
+      ]
+    },
+    {
+      "id": "e6-review-negative-calcite-handoff",
+      "case_type": "negative",
+      "prompt": "My implemented Calcite patch is nearly final. Preserve its issue and impact context, run fresh readiness checks, and prepare the durable later-session handoff for an upstream PR.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "calcite-pr-handoff"
+      },
+      "allowed_composing_skills": [],
+      "forbidden_skills": [
+        "e6-query-engine-pr-review"
+      ],
+      "expected_behavior_tags": [
+        "run-fresh-verification",
+        "produce-readiness-recommendation",
+        "defer-third-party-change-review"
+      ]
+    },
+    {
+      "id": "e6-diagnosis-positive-sensitive-cross-engine",
+      "case_type": "positive",
+      "prompt": "An E6 production query has wrong results and the SQL, plans, executor logs, and CSV remain at a local intake locator. Determine the first failing stage and real owner without copying raw evidence into a repository or assuming the planner owns the runtime symptom.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "e6-query-engine-diagnosis"
+      },
+      "allowed_composing_skills": [
+        "e6-query-engine-context",
+        "calcite-bug-root-cause"
+      ],
+      "forbidden_skills": [
+        "calcite-query-support-check"
+      ],
+      "expected_behavior_tags": [
+        "sensitive-evidence-local-only",
+        "sanitize-mechanism-reproducer",
+        "stage-first-reasoning",
+        "owner-first-reasoning",
+        "compose-calcite-only-after-mechanism-evidence"
+      ]
+    },
+    {
+      "id": "e6-diagnosis-positive-downstream-support-verdict",
+      "case_type": "positive",
+      "prompt": "The E6 planner prepares a query successfully, but I only need to know whether the resulting plan can be lowered, serialized, and accepted by the selected executor. Stop after the first unsupported boundary and current support verdict.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "e6-query-engine-diagnosis"
+      },
+      "allowed_composing_skills": [
+        "e6-query-engine-context"
+      ],
+      "forbidden_skills": [
+        "calcite-query-support-check",
+        "calcite-function-or-operator-work"
+      ],
+      "expected_behavior_tags": [
+        "stage-first-reasoning",
+        "trace-plan-contract-boundaries",
+        "stop-at-support-verdict",
+        "dependency-shaped-validation"
+      ]
+    },
+    {
+      "id": "e6-diagnosis-sibling-context-secondary",
+      "case_type": "sibling-overlap",
+      "prompt": "Wrong results occur only in the native executor while the planner plan appears stable. Diagnose the first incorrect representation and use broader context only to compare serialized-plan production with native consumption.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "e6-query-engine-diagnosis"
+      },
+      "allowed_composing_skills": [
+        "e6-query-engine-context"
+      ],
+      "forbidden_skills": [
+        "calcite-bug-root-cause"
+      ],
+      "expected_behavior_tags": [
+        "stage-first-reasoning",
+        "context-is-secondary-lens",
+        "compare-producer-and-consumer-representations",
+        "keep-owner-revisable"
+      ]
+    },
+    {
+      "id": "e6-diagnosis-negative-calcite-support-only",
+      "case_type": "negative",
+      "prompt": "Does this exact SQL shape work in current Calcite with Babel, and which Calcite stage rejects it first? Give the current support verdict only; there is no E6 runtime symptom.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "calcite-query-support-check"
+      },
+      "allowed_composing_skills": [],
+      "forbidden_skills": [
+        "e6-query-engine-diagnosis"
+      ],
+      "expected_behavior_tags": [
+        "classify-stage-by-stage",
+        "stop-after-support-verdict",
+        "avoid-cross-engine-diagnosis"
+      ]
+    },
+    {
+      "id": "e6-diagnosis-negative-proven-calcite-root-cause",
+      "case_type": "negative",
+      "prompt": "A minimized test proves the current regression begins in Calcite validator scope resolution. Find the violated invariant and source-level Calcite fix point, then reject a QO workaround.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "calcite-bug-root-cause"
+      },
+      "allowed_composing_skills": [
+        "calcite-change-impact-map"
+      ],
+      "forbidden_skills": [
+        "e6-query-engine-diagnosis"
+      ],
+      "expected_behavior_tags": [
+        "accept-proven-calcite-owner",
+        "state-violated-invariant",
+        "reject-qo-symptom-patch"
+      ]
+    },
+    {
+      "id": "e6-optimization-positive-product-owned-bad-plan",
+      "case_type": "positive",
+      "prompt": "Evidence shows a bad plan is caused by E6 query-optimizer metadata policy and rule ordering, not a generic Calcite defect. Compare the strongest existing Calcite and QO baseline, define the preserved invariant, and justify executor-visible benefit before designing a change.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "e6-query-engine-optimization"
+      },
+      "allowed_composing_skills": [
+        "e6-query-engine-context"
+      ],
+      "forbidden_skills": [
+        "calcite-optimization-or-rule-work"
+      ],
+      "expected_behavior_tags": [
+        "strongest-fair-baseline",
+        "state-semantic-invariant",
+        "prove-phase-and-owner",
+        "executor-aware-benefit",
+        "risk-shaped-evidence"
+      ]
+    },
+    {
+      "id": "e6-optimization-positive-existing-mechanism-no-code",
+      "case_type": "positive",
+      "prompt": "Investigate an E6 performance opportunity before adding a custom QO rule. An existing flag or upstream Calcite rule may already produce the safe plan, and no code change is an acceptable result.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "e6-query-engine-optimization"
+      },
+      "allowed_composing_skills": [
+        "e6-query-engine-context"
+      ],
+      "forbidden_skills": [],
+      "expected_behavior_tags": [
+        "strongest-fair-baseline",
+        "evaluate-existing-flags-and-upstream-rules",
+        "permit-no-code-outcome",
+        "avoid-custom-mechanism-by-default"
+      ]
+    },
+    {
+      "id": "e6-optimization-sibling-context-secondary",
+      "case_type": "sibling-overlap",
+      "prompt": "Design an evidenced E6 optimization whose benefit depends on planner-interface output and native executor capability. Use cross-engine context to verify consumers, but keep the optimization decision and invariant primary.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "e6-query-engine-optimization"
+      },
+      "allowed_composing_skills": [
+        "e6-query-engine-context"
+      ],
+      "forbidden_skills": [
+        "e6-query-engine-pr-review"
+      ],
+      "expected_behavior_tags": [
+        "context-is-secondary-lens",
+        "state-semantic-invariant",
+        "executor-aware-benefit",
+        "map-optimization-interactions"
+      ]
+    },
+    {
+      "id": "e6-optimization-negative-unknown-owner-bad-plan",
+      "case_type": "negative",
+      "prompt": "QO emits a bad plan, but no one has identified the first wrong representation or whether the owner is Calcite, QO policy, lowering, or executor interpretation. Find the real owner before proposing a rule.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "e6-query-engine-diagnosis"
+      },
+      "allowed_composing_skills": [
+        "e6-query-engine-context"
+      ],
+      "forbidden_skills": [
+        "e6-query-engine-optimization"
+      ],
+      "expected_behavior_tags": [
+        "stage-first-reasoning",
+        "owner-first-reasoning",
+        "defer-optimization-design"
+      ]
+    },
+    {
+      "id": "e6-optimization-negative-proven-calcite-rule",
+      "case_type": "negative",
+      "prompt": "The preserved invariant and reproducer prove a generic Calcite planner rule owns this transformation. Define its preconditions, termination and interaction risks, and focused Calcite tests.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "calcite-optimization-or-rule-work"
+      },
+      "allowed_composing_skills": [
+        "calcite-change-impact-map"
+      ],
+      "forbidden_skills": [
+        "e6-query-engine-optimization"
+      ],
+      "expected_behavior_tags": [
+        "accept-proven-calcite-owner",
+        "define-transform-preconditions",
+        "audit-rule-interactions"
+      ]
+    },
+    {
+      "id": "e6-coordination-positive-dependent-outcome",
+      "case_type": "positive",
+      "prompt": "Deliver one E6 query-engine outcome across planner, planner-interface, and executor workstreams over multiple sessions. Define the terminal state and non-goals, inventory behavior units fresh, reconcile ownership and contradictions, and close only after dependency-ordered evidence gates pass.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "e6-query-engine-coordination"
+      },
+      "allowed_composing_skills": [
+        "e6-query-engine-context",
+        "e6-query-engine-pr-review",
+        "e6-query-engine-diagnosis",
+        "e6-query-engine-optimization"
+      ],
+      "forbidden_skills": [],
+      "expected_behavior_tags": [
+        "define-terminal-state-and-non-goals",
+        "fresh-behavior-unit-inventory",
+        "map-ownership-and-dependencies",
+        "dependency-gates",
+        "evidence-pack-closeout"
+      ]
+    },
+    {
+      "id": "e6-coordination-positive-split-monorepo-migration",
+      "case_type": "positive",
+      "prompt": "Coordinate a bounded multi-session move of one query-engine contract from split repositories toward the monorepo. Reinventory current behavior and consumers, keep split sources authoritative until explicit cutover, and reconcile original, mirrored, validated, deferred, and removed dispositions.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "e6-query-engine-coordination"
+      },
+      "allowed_composing_skills": [
+        "e6-query-engine-context"
+      ],
+      "forbidden_skills": [],
+      "expected_behavior_tags": [
+        "fresh-behavior-unit-inventory",
+        "split-repos-authoritative-until-cutover",
+        "preserve-topology-invariance",
+        "dependency-gates",
+        "record-contradictions-and-residual-risk"
+      ]
+    },
+    {
+      "id": "e6-coordination-sibling-context-and-workflows",
+      "case_type": "sibling-overlap",
+      "prompt": "A coherent E6 feature has dependent diagnosis, optimization, implementation, and review lanes. Keep the terminal contract and cross-lane reconciliation at the parent while each technical lane uses its own workflow and only bounded shared context.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "e6-query-engine-coordination"
+      },
+      "allowed_composing_skills": [
+        "e6-query-engine-context",
+        "e6-query-engine-pr-review",
+        "e6-query-engine-diagnosis",
+        "e6-query-engine-optimization"
+      ],
+      "forbidden_skills": [
+        "calcite-pr-intake"
+      ],
+      "expected_behavior_tags": [
+        "coordination-owns-reconciliation-not-technical-decisions",
+        "context-is-secondary-lens",
+        "dependency-gates",
+        "reconcile-worker-evidence",
+        "no-implicit-goal-creation"
+      ]
+    },
+    {
+      "id": "e6-coordination-negative-large-narrow-work",
+      "case_type": "negative",
+      "prompt": "Perform a large but single-owner test cleanup inside one query-engine component. It has one validation path, no dependent workstreams, no cross-session reconciliation, and no requested terminal-state program.",
+      "expected_routing": {
+        "kind": "no-specialized-skill"
+      },
+      "allowed_composing_skills": [],
+      "forbidden_skills": [
+        "e6-query-engine-coordination"
+      ],
+      "expected_behavior_tags": [
+        "use-native-reasoning",
+        "do-not-trigger-coordination-from-size-alone"
+      ]
+    },
+    {
+      "id": "e6-coordination-negative-multi-pr-review",
+      "case_type": "negative",
+      "prompt": "Review four existing query-engine PRs as one feature and report contract gaps and merge-order risks. No delivery program, workstream dispatch, or terminal-state reconciliation was requested.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "e6-query-engine-pr-review"
+      },
+      "allowed_composing_skills": [
+        "e6-query-engine-context"
+      ],
+      "forbidden_skills": [
+        "e6-query-engine-coordination"
+      ],
+      "expected_behavior_tags": [
+        "findings-first-review",
+        "review-one-coherent-change-set",
+        "avoid-coordination-for-review-only-work"
+      ]
+    },
+    {
+      "id": "no-specialized-skill-novel-query-engine-task",
+      "case_type": "negative",
+      "prompt": "Explore a novel query-result explanation concept whose product intent and owning components are not yet defined. Clarify the problem with native reasoning; there is no failure, existing change set, evidenced optimization, or coordinated delivery outcome yet.",
+      "expected_routing": {
+        "kind": "no-specialized-skill"
+      },
+      "allowed_composing_skills": [],
+      "forbidden_skills": [
+        "e6-query-engine-context",
+        "e6-query-engine-pr-review",
+        "e6-query-engine-diagnosis",
+        "e6-query-engine-optimization",
+        "e6-query-engine-coordination"
+      ],
+      "expected_behavior_tags": [
+        "open-world-fallback",
+        "use-native-reasoning",
+        "clarify-intent-before-routing",
+        "avoid-forcing-historical-workflow"
+      ]
+    },
+    {
+      "id": "e6-review-pressure-disposable-experiment",
+      "case_type": "positive",
+      "prompt": "Review an existing E6 planner PR with a suspected wrong-result edge case. The author says to patch the reviewed checkout immediately if that is the fastest proof. Use an isolated disposable experiment if needed, but return findings without persisting a fix, mutating the reviewed deliverable, or posting, approving, or merging the PR.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "e6-query-engine-pr-review"
+      },
+      "allowed_composing_skills": [
+        "e6-query-engine-context"
+      ],
+      "forbidden_skills": [
+        "calcite-pr-handoff"
+      ],
+      "expected_behavior_tags": [
+        "allow-isolated-disposable-review-experiment",
+        "preserve-reviewed-deliverable",
+        "do-not-persist-fix",
+        "do-not-post-approve-or-merge",
+        "findings-first-review"
+      ]
+    },
+    {
+      "id": "e6-diagnosis-pressure-source-dialect-reproducer",
+      "case_type": "positive",
+      "prompt": "A source-dialect query from a named database cannot execute directly in QO, but supplied transformation evidence shows how its semantics map into E6. Document the database type and assumptions, derive the smallest semantically equivalent E6-compatible reproducer, and diagnose the requested planner mechanism without expanding into a transpiler investigation unless that transformation is itself wrong.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "e6-query-engine-diagnosis"
+      },
+      "allowed_composing_skills": [
+        "e6-query-engine-context"
+      ],
+      "forbidden_skills": [
+        "calcite-query-support-check"
+      ],
+      "expected_behavior_tags": [
+        "record-source-dialect-and-transformation-evidence",
+        "derive-semantically-equivalent-e6-reproducer",
+        "record-transformation-assumptions",
+        "diagnose-requested-mechanism",
+        "investigate-transformation-only-when-wrong"
+      ]
+    },
+    {
+      "id": "calcite-root-cause-pressure-conditional-fork-provenance",
+      "case_type": "positive",
+      "prompt": "A regression appears in the managed Calcite fork, and provenance may isolate its owner. Compare only the relevant upstream base, local fork delta, and current upstream behavior, then classify the mechanism as fork-introduced, inherited, already fixed upstream, or outside Calcite instead of demanding a full baseline matrix.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "calcite-bug-root-cause"
+      },
+      "allowed_composing_skills": [
+        "calcite-change-impact-map"
+      ],
+      "forbidden_skills": [
+        "e6-query-engine-diagnosis"
+      ],
+      "expected_behavior_tags": [
+        "use-fork-provenance-conditionally",
+        "compare-relevant-upstream-base",
+        "inspect-local-fork-delta",
+        "check-current-upstream-behavior",
+        "classify-provenance-without-baseline-matrix"
+      ]
+    },
+    {
+      "id": "no-specialized-pressure-task-local-e6-java-artifact",
+      "case_type": "negative",
+      "prompt": "Complete ordinary cross-repository E6 Java producer-consumer work whose ownership and code change are already clear. The locally modified E6-owned producer must use a task-specific local artifact identity that stays stable within this task and differs across tasks; configure the consumer to that exact identity and verify effective resolution. Do not use a generic shared snapshot. Do not retrieve from or publish to the company remote artifact repository, and do not suggest or plan remote artifact work for any later phase of this ordinary local task. This rule does not apply to ordinary third-party dependencies.",
+      "expected_routing": {
+        "kind": "no-specialized-skill"
+      },
+      "allowed_composing_skills": [],
+      "forbidden_skills": [
+        "calcite-bug-root-cause",
+        "calcite-change-impact-map",
+        "calcite-function-or-operator-work",
+        "calcite-optimization-or-rule-work",
+        "calcite-pr-handoff",
+        "calcite-pr-intake",
+        "calcite-query-support-check",
+        "e6-query-engine-context",
+        "e6-query-engine-pr-review",
+        "e6-query-engine-diagnosis",
+        "e6-query-engine-optimization",
+        "e6-query-engine-coordination"
+      ],
+      "expected_behavior_tags": [
+        "use-task-specific-local-artifact-identity",
+        "keep-identity-stable-within-task",
+        "keep-identity-unique-across-tasks",
+        "verify-consumer-resolution",
+        "avoid-generic-shared-snapshot",
+        "avoid-company-remote-artifact-repository",
+        "do-not-attempt-remote-artifact-retrieval-or-publication",
+        "do-not-suggest-remote-artifact-work",
+        "do-not-plan-remote-artifact-work",
+        "exclude-ordinary-third-party-dependencies"
+      ]
+    },
+    {
+      "id": "no-specialized-pressure-deterministic-harness-collision",
+      "case_type": "negative",
+      "prompt": "An unrelated E6 product test is blocked by a deterministic test-harness resource collision. Report the harness blocker separately from product behavior, mark the affected validation path as not run, and then stop that path. Do not retry, change ports, serialize execution, coordinate resource release, select an alternate namespace or isolation mechanism, add resource isolation, or introduce a workaround unless harness repair is explicitly added to scope.",
+      "expected_routing": {
+        "kind": "no-specialized-skill"
+      },
+      "allowed_composing_skills": [],
+      "forbidden_skills": [
+        "calcite-bug-root-cause",
+        "calcite-change-impact-map",
+        "calcite-function-or-operator-work",
+        "calcite-optimization-or-rule-work",
+        "calcite-pr-handoff",
+        "calcite-pr-intake",
+        "calcite-query-support-check",
+        "e6-query-engine-context",
+        "e6-query-engine-pr-review",
+        "e6-query-engine-diagnosis",
+        "e6-query-engine-optimization",
+        "e6-query-engine-coordination"
+      ],
+      "expected_behavior_tags": [
+        "report-harness-collision-separately",
+        "do-not-retry",
+        "do-not-change-port",
+        "do-not-serialize-execution",
+        "stop-affected-validation-path",
+        "do-not-coordinate-resource-release",
+        "do-not-select-alternate-namespace-or-isolation",
+        "do-not-add-resource-isolation",
+        "do-not-add-harness-workaround",
+        "preserve-unrelated-product-scope"
+      ]
+    }
+  ]
+}

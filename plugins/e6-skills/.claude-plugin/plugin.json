@@ -1,7 +1,7 @@
 {
   "name": "e6-skills",
-  "description": "Repo-specific E6 workflow, review, and durable handoff skills for coding agents",
-  "version": "0.1.0",
+  "description": "E6 query-engine context, diagnosis, optimization, coordination, review, and specialized Calcite skills",
+  "version": "0.2.0",
   "author": {
     "name": "E6"
   },
@@ -10,7 +10,8 @@
   "license": "Proprietary",
   "keywords": [
     "e6",
-    "repo-workflows",
+    "query-engine",
+    "calcite",
     "skills",
     "workflow",
     "review"
