@@ -52,16 +52,16 @@ reviewed change, posting, approving, or merging requires separate authorization.
 
 ## Output And Stop Contract
 
-For one repository, return the final review inside one concise, copy-ready
-fenced `markdown` block. For a review spanning repositories, return one such
-block per repository, labeled by repository or PR outside the fence. Keep each
-block self-contained: include only that repository's findings and applicable
-source-state limits, validation, dependency asks, and residual risk. Reset
-finding numbering in each block. Preserve the coherent cross-repository analysis;
-place a cross-repository issue in the block for every repository whose PR must
-act on it, stated from that repository's perspective.
+For one PR, return the final review inside one concise, copy-ready fenced
+`markdown` block. For a review spanning PRs, return one such block per PR,
+labeled by repository and PR outside the fence. Treat a standalone diff without
+an associated PR as one review target. Keep each block self-contained: include
+only that PR's findings and applicable source-state limits, validation,
+dependency asks, and residual risk. Reset finding numbering in each block.
+Preserve the coherent cross-PR analysis; place a cross-PR issue in the block for
+every PR that must act on it, stated from that PR's perspective.
 
-Do not put review prose outside the copy blocks, split one repository's review
+Do not put review prose outside the copy blocks, split one PR's review
 across fences, or nest fenced code inside a block; use inline code or indentation
 for snippets. Number actionable findings `1.`, `2.`, `3.` in severity order. For
 each, include a GitHub-usable repository-relative location, semantic consequence,
@@ -69,8 +69,8 @@ direct ask, and verification status when relevant; do not force empty labels or
 repeat the analysis narrative.
 
 After the findings, include only applicable source-state limits, open questions,
-validation gaps, and residual risk. If a repository has no findings, say so in
-its block and name what remains untested or unavailable. Follow a different
+validation gaps, and residual risk. If a PR has no findings, say so in its block
+and name what remains untested or unavailable. Follow a different
 format only when the user requests one. Stop after the review report unless
 implementation or external review actions were separately requested.
 

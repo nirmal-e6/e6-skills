@@ -616,10 +616,10 @@
         "map-changed-contract-consumers",
         "analyze-merge-dependencies",
         "bounded-context-expansion",
-        "one-copy-ready-block-per-repository",
-        "group-findings-by-repository",
-        "keep-repository-blocks-self-contained",
-        "preserve-coherent-cross-repository-analysis"
+        "one-copy-ready-block-per-pr",
+        "group-findings-by-pr",
+        "keep-pr-blocks-self-contained",
+        "preserve-coherent-cross-pr-analysis"
       ]
     },
     {
@@ -640,11 +640,37 @@
       ],
       "expected_behavior_tags": [
         "review-one-coherent-change-set",
-        "one-copy-ready-block-per-repository",
-        "group-findings-by-repository",
-        "reset-numbering-per-repository",
-        "keep-repository-blocks-self-contained",
-        "place-cross-repository-asks-with-each-required-owner",
+        "one-copy-ready-block-per-pr",
+        "group-findings-by-pr",
+        "reset-numbering-per-pr",
+        "keep-pr-blocks-self-contained",
+        "place-cross-pr-asks-with-each-required-owner",
+        "no-review-prose-outside-copy-blocks"
+      ]
+    },
+    {
+      "id": "e6-review-positive-same-repo-multi-pr-copy-ready-output",
+      "case_type": "positive",
+      "prompt": "Review two dependent query-optimizer PRs in the same repository as one coherent change. Return a separate copy-ready GitHub comment for each PR, keep each comment self-contained, and put shared dependency findings in every PR that must act on them.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "e6-query-engine-pr-review"
+      },
+      "allowed_composing_skills": [
+        "e6-query-engine-context"
+      ],
+      "forbidden_skills": [
+        "calcite-pr-intake",
+        "calcite-pr-handoff",
+        "e6-query-engine-coordination"
+      ],
+      "expected_behavior_tags": [
+        "review-one-coherent-change-set",
+        "one-copy-ready-block-per-pr",
+        "do-not-collapse-prs-by-repository",
+        "reset-numbering-per-pr",
+        "keep-pr-blocks-self-contained",
+        "place-cross-pr-asks-with-each-required-owner",
         "no-review-prose-outside-copy-blocks"
       ]
     },
