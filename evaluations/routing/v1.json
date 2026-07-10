@@ -566,7 +566,33 @@
         "verify-source-state",
         "owner-first-reasoning",
         "risk-shaped-tests",
-        "recheck-corrections"
+        "recheck-corrections",
+        "single-copy-ready-github-markdown-block",
+        "number-findings-in-severity-order",
+        "keep-review-comment-concise"
+      ]
+    },
+    {
+      "id": "e6-review-positive-copy-ready-github-comment",
+      "case_type": "positive",
+      "prompt": "Give me the final review for this existing e6-calcite PR as a GitHub comment I can copy directly. Keep it concise and number the findings 1, 2, 3 rather than surrounding the review with explanation.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "e6-query-engine-pr-review"
+      },
+      "allowed_composing_skills": [
+        "e6-query-engine-context"
+      ],
+      "forbidden_skills": [
+        "calcite-pr-intake",
+        "calcite-pr-handoff"
+      ],
+      "expected_behavior_tags": [
+        "findings-first-review",
+        "single-copy-ready-github-markdown-block",
+        "no-review-text-outside-copy-block",
+        "number-findings-in-severity-order",
+        "keep-review-comment-concise"
       ]
     },
     {

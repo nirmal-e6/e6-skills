@@ -52,10 +52,18 @@ reviewed change, posting, approving, or merging requires separate authorization.
 
 ## Output And Stop Contract
 
-Return findings first, then source-state limits, open questions, validation gaps,
-and residual risk. If there are no findings, say so and name what remains
-untested or unavailable. Stop after the review report unless implementation or
-external review actions were separately requested.
+Return the final review inside one concise, copy-ready fenced `markdown` block,
+with no review text outside it. Do not split it across fences or nest fenced
+code inside it; use inline code or indentation for snippets. Number actionable
+findings `1.`, `2.`, `3.` in severity order. For each, include a GitHub-usable
+repository-relative location, semantic consequence, direct ask, and verification
+status when relevant; do not force empty labels or repeat the analysis narrative.
+
+After the findings, include only applicable source-state limits, open questions,
+validation gaps, and residual risk. If there are no findings, say so in the same
+single block and name what remains untested or unavailable. Follow a different
+format only when the user requests one. Stop after the review report unless
+implementation or external review actions were separately requested.
 
 ## Composition Boundaries
 
