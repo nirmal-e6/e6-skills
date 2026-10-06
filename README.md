@@ -10,6 +10,10 @@ The repo intentionally has one install shape:
 - One plugin adapter named `e6-skills` for plugin-aware agents.
 - Shared runtime briefs under `~/.e6/skills/artifacts/`.
 
+The query-engine monorepo is the default source for migrated components.
+Forked dependencies such as `shared/e6-calcite` keep their independent Git
+and build boundaries. The context skill maps the relevant component edges.
+
 ## Current Skills
 
 The broad E6 query-engine portfolio is:
@@ -34,8 +38,8 @@ skills/calcite-pr-intake/
 skills/calcite-query-support-check/
 ```
 
-Skills are named for repeatable capabilities and lifecycle outcomes, not split
-repositories or monorepo paths. When no specialized skill clearly applies, use
+Skills are named for repeatable capabilities and lifecycle outcomes, not
+repository names or paths. When no specialized skill clearly applies, use
 native reasoning instead of forcing the nearest workflow.
 
 ## Install

@@ -10,9 +10,9 @@ multiple PRs.
 
 ## Ownership
 
-This skill owns correctness review: source-state limits, intended invariant,
-behavior-level ownership, changed-contract consumers, semantic fallout,
-risk-shaped tests, correction rechecks, and residual risk.
+This skill owns correctness and design review: source-state limits, intended
+invariant, behavior-level ownership, changed-contract consumers, semantic
+fallout, risk-shaped tests, correction rechecks, and residual risk.
 
 It does not own future Calcite candidate intake, the worker's Calcite handoff,
 implementation, or delivery coordination. Review is non-mutating with respect
@@ -33,35 +33,50 @@ reviewed change, posting, approving, or merging requires separate authorization.
 
 1. Verify the change set and source state. State any freshness or access limit
    before drawing conclusions.
-2. Express the change as one semantic contract and identify its behavior-level
-   owner. Compare it with the strongest fair existing Calcite, QO, interface,
-   or executor mechanism before accepting new machinery.
+2. Express each independently observable behavior as a semantic contract and
+   identify its behavior-level owner. Compare it with the strongest fair existing
+   Calcite, QO, interface, or executor mechanism before accepting new machinery.
+   For optimization design, apply `e6-query-engine-optimization` criteria.
 3. Follow the changed contract through producers, sibling paths, artifacts,
    serialization, generated sources, state capture/reset, and runtime consumers.
    Use `e6-query-engine-context` only for edges the diff actually reaches.
+   Check redundant guards, unnecessary abstractions, and repeated planner work
+   against their correctness or reuse purpose; retain necessary semantic guards.
 4. Test preserved invariants across relevant flags, fallbacks, executor modes,
    cached paths, and cross-PR merge/dependency order.
 5. Judge validation by risk and first affected surface; compile success or one
-   passing layer does not prove downstream consumption.
+   passing layer does not prove downstream consumption. Require behavior-scoped
+   tests in the owning layer's standard fixtures. Assess complex-case coverage
+   separately from harness complexity, and check actual execution and skips.
 6. When read-only evidence is insufficient, record the setup and result of a
    clearly isolated disposable experiment without changing the review target.
-7. Lead with severity-ordered findings. Give evidence, semantic consequence,
-   and a direct correction or verification ask for each.
+7. Lead with severity-ordered findings. Separate reproduced correctness
+   failures, design objections, and unverified claims. Give evidence, consequence,
+   and the smallest clear correction or verification ask for each.
 8. Recheck corrections against the original finding and dependent surfaces,
    then state contradictions, deferred questions, and residual risk.
 
 ## Output And Stop Contract
 
-Return the final review inside one concise, copy-ready fenced `markdown` block,
-with no review text outside it. Do not split it across fences or nest fenced
-code inside it; use inline code or indentation for snippets. Number actionable
-findings `1.`, `2.`, `3.` in severity order. For each, include a GitHub-usable
-repository-relative location, semantic consequence, direct ask, and verification
-status when relevant; do not force empty labels or repeat the analysis narrative.
+For one PR, return the final review inside one concise, copy-ready fenced
+`markdown` block. For a review spanning PRs, return one such block per PR,
+labeled by repository and PR outside the fence. Treat a standalone diff without
+an associated PR as one review target. Keep each block self-contained: include
+only that PR's findings and applicable source-state limits, validation,
+dependency asks, and residual risk. Reset finding numbering in each block.
+Preserve the coherent cross-PR analysis; place a cross-PR issue in the block for
+every PR that must act on it, stated from that PR's perspective.
+
+Do not put review prose outside the copy blocks, split one PR's review
+across fences, or nest fenced code inside a block; use inline code or indentation
+for snippets. Number actionable findings `1.`, `2.`, `3.` in severity order. For
+each, include a GitHub-usable repository-relative location, semantic consequence,
+direct ask, and verification status when relevant; do not force empty labels or
+repeat the analysis narrative.
 
 After the findings, include only applicable source-state limits, open questions,
-validation gaps, and residual risk. If there are no findings, say so in the same
-single block and name what remains untested or unavailable. Follow a different
+validation gaps, and residual risk. If a PR has no findings, say so in its block
+and name what remains untested or unavailable. Follow a different
 format only when the user requests one. Stop after the review report unless
 implementation or external review actions were separately requested.
 

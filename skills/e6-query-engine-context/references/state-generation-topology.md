@@ -1,77 +1,56 @@
-# State, Generation, Topology, And Evidence
+# Effective State And Build Boundaries
 
-Use this capsule when behavior depends on mutable/global state, cached or
-generated representations, split/monorepo location, volatile facts, sensitive
-evidence, or promotion of a newly learned rule.
+Use this capsule when configuration capture, cached planning, generated inputs,
+or artifact resolution can explain a difference between source and behavior.
+Revalidate the named mechanisms and build edges in the active checkout.
 
-## State And Generation Edges
+## State Ownership And Capture
 
-The following relationships were observed in current code. Recheck the named
-symbols and effective modes before applying them.
+Useful starting points:
 
-- Planner `Env` supplies startup configuration while `MutableEnv.INSTANCE`
-  carries runtime-updatable state. A changed value does not prove that an
-  existing consumer recaptured it.
-- Fork `CalciteForkSettings.Provider` is process-global and is installed by
-  planner `E6PlannerContext#configureCalciteForkBridges`.
-- `E6SqlValidatorImpl` and `E6SqlToRelConverter` keep mutable CTE/view,
-  recursion, hint, temporary-table, and filter state. Reset boundaries are
-  semantic boundaries.
-- Parameterized and cached planning can defer optimization/lowering or rebind a
-  stored relational value into a current cluster. A cached `RelNode` is not
-  automatically context free.
-- `QueryExecutionNode#prepare` has set process-static lowering flags on
-  `OperatorNodeHelper`; concurrent planning and capture time therefore require
-  explicit scrutiny.
-- Planner and executors maintain query-id keyed contexts with distinct
-  cancellation, clear, close, and memory lifecycles.
-- Parser generation combines resources from the Calcite artifact with planner
-  overlays. Thrift generation connects IDL, scripts, checked-in Java/Rust
-  output, and both executor consumers.
+- Planner `Env` and `MutableEnv.INSTANCE`: distinguish startup values, mutable
+  reads, and snapshots captured by a consumer.
+- `E6PlannerContext#configureCalciteForkBridges`: installs a process-wide
+  `CalciteForkSettings.Provider`. Inspect the bridge and fork's read sites when
+  deciding which planner context supplies metadata or settings.
+- `E6SqlValidatorImpl` and `E6SqlToRelConverter`: mutable CTE/view, recursion,
+  hint, temporary-table, and filter state; inspect reuse and reset boundaries.
+- `QueryExecutionNode#prepare` calls `OperatorNodeHelper#setRollupEnabled` and
+  `#setDecimal128Enabled`; those helper settings are static. Trace read/capture
+  timing and concurrent planning when these settings affect lowering.
+- Parameterized/cached planning: optimization may be deferred until binding or
+  a stored `RelNode` rebound into another cluster. Follow the active planner,
+  metadata provider, and context, not just the stored tree.
 
-For any mutable or generated feature, trace declaration, mutation, capture,
-propagation, cache/rebind, reset, concurrency, generated output, serialization,
-consumer, and cleanup only where the current mechanism uses those edges.
+For the affected value, identify its owner and lifetime, write/read/capture sites,
+cache key and invalidation, rebinding/reset, and concurrent users. A changed
+configuration value does not prove existing plans or consumers recaptured it;
+a copied or cached node does not prove its derived metadata remains valid.
+Query-id cleanup belongs in
+[executor-consumers-lifecycle.md](executor-consumers-lifecycle.md).
 
-## Logical Topology
+## Source To Consumer
 
-| Component identity | Authoritative split locator | Monorepo correspondence |
+| Component identity | Current locator | Build boundary |
 | --- | --- | --- |
-| Planner service and QO | `e6-query-optimizer` | `components/planner` |
-| Planner contract/lowering | `e6-planner-interface` | `shared/planner-interface` |
-| Java executor | `e6-executor` | `components/executor` |
-| Native executor | `e6-native-executor` | `components/native-executor` |
-| Calcite framework fork | `e6-calcite` | External artifact dependency |
+| Planner service and QO | `components/planner` | Root Maven reactor |
+| Planner contract/lowering | `shared/planner-interface` | Root Maven reactor |
+| Workspace service IDL | `shared/workspace-services-thrift` | Root Maven reactor |
+| Shared service IDL | `shared/services-thrift` | Root Maven reactor |
+| Java executor | `components/executor` | Root Maven reactor |
+| Native executor | `components/native-executor` | Cargo workspace/component |
+| Calcite framework fork | `shared/e6-calcite` | Independent Git submodule and Gradle-published Maven artifacts |
 
-These are discovery identities, not file-equivalence claims. Split repositories
-remain authoritative until the user explicitly declares cutover. After cutover,
-revalidate the table rather than preserving the old authority as doctrine.
+The monorepo owns migrated components and integrated verification; Calcite keeps
+its independent history at the submodule pin. Prefer integrated Make targets.
+The root Maven reactor consumes published `io.e6x.calcite` artifacts rather than
+building Calcite as a reactor module. Verify effective resolution and the loaded
+artifact where needed; a checkout or dependency declaration alone is insufficient.
+For deliberately separate producer/consumer task worktrees, use a task-specific
+local artifact version and verify that exact version in the consumer.
 
-Use artifact/crate identity, entry symbols, and contract names to follow a
-component across layouts. Treat source present in both layouts as potentially
-divergent until exact files and manifests prove otherwise.
-
-## Evidence Boundaries
-
-- **Durable:** reviewed semantic invariants, ownership tests, stable logical
-  identities, and revalidation rules.
-- **Volatile:** branch/PR state, CI, artifact versions, effective flags, current
-  defaults, timings, test counts, services, and source-authority status.
-- **Sensitive/raw:** customer SQL, logs, CSVs, full plans, credentials, private
-  threads, and incident attachments.
-- **Derived:** a sanitized mechanism reproducer or generalized lesson that does
-  not disclose raw data or volatile identifiers.
-
-Keep sensitive/raw evidence at user-designated local intake locators. Store only
-locators and handling classifications in working output; never copy raw material
-into this repository, implementation repositories, or shared durable artifacts.
-Volatile evidence must include when and where it was observed and what would
-invalidate it.
-
-## Learning Promotion
-
-Solve novel work with current code and native reasoning first. Promote a lesson
-only after recurrence across independent tasks or a clearly reusable invariant,
-review for sensitivity and staleness, and an explicit revalidation trigger.
-Prefer improving an existing capsule over adding a skill or catalog. Keep
-rejected hypotheses visible in local working evidence, not as durable facts.
+Parser generation combines Calcite resources with planner overlays. Trace the
+actual generation/build inputs if parser source and behavior disagree. For
+Thrift contracts and Java/Rust outputs, use
+[plan-contract-lowering.md](plan-contract-lowering.md) rather than duplicating
+the contract audit here.

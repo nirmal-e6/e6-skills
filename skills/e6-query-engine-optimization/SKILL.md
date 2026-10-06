@@ -32,16 +32,24 @@ generic Calcite rule work, or implementation before the contract is accepted.
 2. Define preserved semantics: multiplicity, null extension, ordering, identity,
    field mapping, evaluation domain, liveness, and other relevant obligations.
 3. Establish the strongest fair current baseline across existing Calcite rules,
-   QO programs/policy, flags, metadata, cost models, and supported modes.
-4. Identify the owning phase and behavior-level owner. Compare an upstream rule,
-   existing flag, configuration, extension point, or deletion of custom logic
-   before proposing new machinery.
+   QO programs/policy, flags, metadata, cost models, and supported modes. Distinguish
+   illegal plans, reduction/phase-ordering gaps, missing exploration candidates,
+   bad estimates, and selection errors. Check supported enumerators before
+   adding a selection heuristic.
+4. Identify the owning phase and behavior-level owner. For a new rule or
+   heuristic, compare broader mechanisms in current upstream code, established
+   databases, and primary research; explain why the strongest alternatives
+   apply or fail. A sound narrow matcher alone does not justify new machinery.
+   Prefer a small extension at the owner, existing utilities, and clear inline
+   logic. Justify new abstractions and flags; remove unnecessary scaffolding.
 5. Prove executor-aware benefit through the plan contract and actual consumer
    capabilities; do not optimize a representation the selected executor cannot
-   exploit.
-6. Audit overlap, termination, rule order, traits, costing, caches, fallbacks,
-   serialization, generated contracts, concurrency, and alternate executors only
-   where the mechanism can interact with them.
+   exploit. Keep comparisons within the existing cost contract, currently
+   row-count-based in E6. Additional cost dimensions require deliberate design.
+6. Audit overlap, termination, rule order, traits, costing, repeated tree or
+   metadata work, caches, fallbacks, serialization, generated contracts,
+   concurrency, and alternate executors only where the mechanism can interact
+   with them.
 7. Select risk-shaped evidence: focused semantic negatives, plan differences,
    mode comparisons, consumer checks, and performance evidence appropriate to
    the claim.

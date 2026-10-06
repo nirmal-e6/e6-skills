@@ -1,75 +1,60 @@
 # Executor Consumers And Lifecycle
 
-Use this capsule for Java/native plan ingestion, physical construction,
-per-query state, results, cancellation, clear/close behavior, or capability
-differences. Revalidate current code and runtime modes before making parity or
-ownership claims.
+Use this capsule for plan ingestion, physical construction, query state, results,
+cancellation, or Java/native capability differences. Revalidate the selected
+query shape and runtime mode before making support or parity claims.
 
-## Observed Consumer Boundaries
+## Starting Landmarks
 
 ### Java executor
 
-- `e6-executor/src/main/java/io/e6x/server/QueryExecutorServiceImpl.java`
-  (`executeQuery`) deserializes Java bytes into `QueryPlan`.
-- `e6-executor/src/main/java/io/e6x/sql/plan/pipelined/ExecutionOperatorBuilderV2.java`
-  (`createOperatorTree`) recursively maps planner-interface nodes into Java operators.
-- `e6-executor/src/main/java/io/e6x/engine/pipelined/PipelinedExecutor.java`
+- `components/executor/src/main/java/io/e6x/server/QueryExecutorServiceImpl.java`
+  (`executeQuery`) reads Java-serialized `QueryPlan` bytes.
+- `components/executor/src/main/java/io/e6x/sql/plan/pipelined/ExecutionOperatorBuilderV2.java`
+  (`createOperatorTree`) builds Java operators from planner-interface nodes.
+- `components/executor/src/main/java/io/e6x/engine/pipelined/PipelinedExecutor.java`
   owns pipeline execution and chunk production.
-- Service maps, `QueryContextCache`, and `QueryContext` hold query-id keyed
-  state, memory, task permits, and effective environment snapshots.
+- `QueryContextCache`, `QueryContext`, and service maps hold query-id keyed
+  state, permits, memory, and captured configuration.
 
 ### Native executor
 
-- `e6-native-executor/src/thrift_server.rs` deserializes `TQueryPlan`.
-- `e6-physical-plan/src/plan_conversion.rs#convert_to_physical_plan` maps the
-  operator union into a DataFusion physical plan.
-- `query_executor` creates per-query state, optionally optimizes/pipelines the
-  physical plan, executes a stream, and hands batches to the service layer.
-- Native `QueryContext` owns result channels, cancellation, timeout, memory,
-  and plan/analyze lifecycle state.
+- `components/native-executor/src/thrift_server.rs` decodes `TQueryPlan`.
+- `components/native-executor/e6-physical-plan/src/plan_conversion.rs`
+  (`convert_to_physical_plan`) constructs DataFusion physical plans.
+- `components/native-executor/src/query_executor/` owns query execution and
+  `QueryContext`, including result channels, cancellation, timeout, memory,
+  and plan/analyze state.
 
-These are logical entry points. Confirm package paths and signatures in the
-active split repository or corresponding monorepo component.
+## Capability And Routing
 
-## Lifecycle Questions
+Trace the selected executor and query-shape branch through decoding, operator
+construction, expression/type support, execution, and result delivery. Preparing
+a query does not prove it can be lowered or executed. Accepting an operator does
+not prove every type or mode it can carry is supported. Inspect current handlers
+and fallback/selection inputs instead of maintaining a static capability list.
 
-For a changed state or execution path, trace:
+Compare the last correct producer representation with the consumer's inputs and
+interpretation. A runtime symptom does not establish executor ownership; a plan
+that looks unchanged can still have different fields or captured configuration.
+Distinguish an explicit unsupported branch from an untested path.
 
-1. Creation and the flags/configuration captured at creation time
-2. Registration by query id and every lookup owner
-3. Normal completion, timeout, cancellation, retry, and partial failure
-4. Result-store or stream handoff before state removal
-5. `clear`, `close`, cache eviction, and memory/reference release ordering
-6. Reuse, reset, and concurrency behavior for process-global or cached state
+## Lifecycle Boundaries
 
-Planner, Java executor, and native executor maintain different query state.
-A cleanup fix is not complete until the producer, remote call, consumer, and
-retry/error paths agree on lifecycle semantics.
+For changed state, trace:
 
-## Capability And Routing Boundaries
+1. Creation, configuration capture, registration, and lookup ownership
+2. Completion, timeout, cancellation, retry, and partial failure
+3. Result-store/stream ownership transfer, state removal, and resource release
+4. Cache/global-state reuse, reset, and concurrent access
 
-Capability is query-shape and mode dependent, not a deployment-wide Boolean.
-Observed examples include a DML Thrift route and an optional two-pass INSERT
-path that can use different executors. Public native service methods have also
-had explicit gaps. Treat all such details as volatile: inspect the current
-service handler, cluster/executor selection inputs, and fallback path.
-
-Do not infer executor ownership merely because the final symptom appears at
-runtime. Compare the last correct serialized plan with the first incorrect
-consumer interpretation.
+Planner and executors have distinct query contexts. Follow the affected remote
+call and error path when a handoff changes; success-path cleanup alone does not
+establish the lifecycle contract.
 
 ## Validation Shape
 
-- Prove plan bytes/fields at the consumer boundary when serialization is in scope.
-- Exercise only affected operator variants and modes first.
-- Compare Java and native behavior when their contract should match.
-- Test cancellation/clear/close and failure paths when state ownership changes.
-- Record unsupported or untested capabilities as residual risk, not parity.
-
-## Topology Boundary
-
-Logical identities map from `e6-executor` to
-`e6-query-engine/components/executor` and from `e6-native-executor` to
-`e6-query-engine/components/native-executor`. Split repositories remain
-authoritative until the user declares cutover; paired files may differ, so
-revalidate exact symbols and manifests before using a monorepo copy.
+Check bytes/fields and the affected consumer first. Compare Java/native results
+where they promise the same semantics; exercise cancellation or failure when
+state ownership changes. Keep untested modes and runtime-state assumptions
+explicit rather than claiming parity from compilation or one successful route.

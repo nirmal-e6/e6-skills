@@ -1,72 +1,75 @@
 # Plan Contract And Lowering
 
-Use this capsule when a Calcite `RelNode`, executor-facing plan, serialization
-format, generated source, or downstream plan consumer is in scope.
+Use this capsule for relational-to-executor lowering, shared plan definitions,
+serialization, or generated plan contracts. Revalidate the landmarks and selected
+execution path in the active checkout.
 
-All relationships below were observed in current code when this map was built;
-revalidate symbols and representations in the active checkout.
+## Starting Path
 
-## Observed Lowering Path
-
-1. Planner `QueryExecutionNode#prepare` invokes planner-interface
+1. Planner `QueryExecutionNode#prepare` calls planner-interface
    `OperatorNodeHelper#createOperatorTree`.
 2. `OperatorNodeHelper#getOperatorNode` dispatches over relational node types
-   and creates executor-facing `AbstractOperatorNode` objects.
-3. The root is wrapped in planner-interface `QueryPlan`; it is no longer a
-   Calcite `RelNode`.
-4. Planner `ExecutionNode#serializeQueryPlan` chooses Java serialization or
-   binary Thrift. `QueryExecutionNode#execute` has query-shape-specific routing,
-   including a Thrift path for DML.
+   into `AbstractOperatorNode` objects, wrapped in `QueryPlan`.
+3. Planner `ExecutionNode#serializeQueryPlan` selects Java serialization or
+   binary Thrift; `QueryExecutionNode#execute` also has query-shape-specific
+   routing. Follow the actual branch, including deferred parameter binding.
 
-Start with these repo-relative landmarks:
+Repo-relative entry files:
 
-- `e6-query-optimizer/src/main/java/io/e6x/sql/QueryExecutionNode.java`
-- `e6-query-optimizer/src/main/java/io/e6x/sql/ExecutionNode.java`
-- `e6-planner-interface/src/main/java/io/e6x/sql/plan/QueryPlan.java`
-- `e6-planner-interface/src/main/java/io/e6x/sql/plan/operators/OperatorNodeHelper.java`
+- `components/planner/src/main/java/io/e6x/sql/QueryExecutionNode.java`
+- `components/planner/src/main/java/io/e6x/sql/ExecutionNode.java`
+- `shared/planner-interface/src/main/java/io/e6x/sql/plan/QueryPlan.java`
+- `shared/planner-interface/src/main/java/io/e6x/sql/plan/operators/OperatorNodeHelper.java`
 
-## Dual Contract
+## Schema And Identity Boundaries
 
-`QueryPlan` participates in two representations:
+Follow the same values across `RelDataType`, operator `RowInfo`, wire fields, and
+consumer schemas. Check field order, input ordinals, type/nullability, and numeric
+precision/scale where they are transformed. Preserve fields used by expressions
+and residual predicates even when they are absent from the final projection.
 
-- Java object serialization consumed by the Java executor
-- `toThrift` conversion into `TQueryPlan` consumed by the native executor
+Not every dependency is a tree child. `E6TempTableScan` reaches its definition
+through `E6TempTable#getOptimizedWithNode`; lowering wraps it in
+`TempSinkOperatorNode`, whose definition has a separate child accessor. Inspect
+these edges when visiting, rewriting, estimating, hashing, or serializing a
+shared plan; following only ordinary inputs can miss the definition.
 
-The language-neutral contract begins in
-`e6-planner-interface/src/main/resources/e6_operators.thrift`, where
-`TOperatorNode` selects operator variants and `TQueryPlan` carries the root and
-query metadata. Sibling IDLs define expressions, fields, functions, types, and
-the executor service.
+Distinguish a definition's identity from each reference's output schema and
+parent. Java `ExecutionOperatorBuilderV2` and native `convert_to_physical_plan`
+reuse temp definitions by name. If an encoding emits a definition once, verify
+name/ID scope, consumer lookup and construction order, repeated references, and
+reset between plans. Do not infer a safe sharing protocol from equal plan text.
 
-A field or operator change is incomplete until both representations, union
-membership, numbering/compatibility, and consumers have been checked.
+## Representation And Generation Boundaries
 
-## Generated-Source Boundary
+`QueryPlan` has Java object serialization for the Java executor and `toThrift`
+conversion into `TQueryPlan` for the native executor. The language-neutral
+operator union and query metadata begin in
+`shared/planner-interface/src/main/resources/e6_operators.thrift`; sibling IDLs
+supply expressions, fields, functions, types, and service contracts.
 
-Treat IDL, generation scripts, checked-in Java/Rust outputs, build manifests,
-and consuming code as one dependency edge. Do not review generated class bodies
-as the source of truth. At map time, `e6-planner-interface/generate.sh` did not
-prove regeneration coverage for every checked-in module; inspect the current
-script and generated markers rather than inheriting that observation.
+Identify the affected representations and operator variants. Check value/type
+preservation, optional-field defaults, union dispatch, and compatibility of
+existing field numbers. Check cached or mixed-version consumption when the plan
+can outlive the producing process; one representation does not prove the other.
 
-## Consumer Audit
+Trace the changed IDL through its actual generator, Java/Rust outputs, build
+manifests, and consumers. Verify that generation covers the changed module and
+that consumers compile or load that output. A nearby generation script or one
+regenerated language does not prove complete coverage; generated class bodies
+are not the owning contract.
 
-Follow only variants touched by the change:
+## Consumer Proof
 
-- Java: `QueryExecutorServiceImpl#executeQuery` to
+Follow the affected variants to:
+
+- Java: `QueryExecutorServiceImpl#executeQuery` and
   `ExecutionOperatorBuilderV2#createOperatorTree`
-- Native: Thrift deserialization to `convert_to_physical_plan`
-- Planner: creation, serialization choice, query-shape routing, and result path
-- Mixed-version or cached-plan behavior when the contract can outlive a process
+- Native: Thrift decoding and `convert_to_physical_plan`
+- Planner: serialization selection, execution routing, and result schema
 
-Compile or source generation alone does not prove downstream consumption.
-Choose validation along the artifact graph: source contract, generated outputs,
-publication/resolution if applicable, each changed consumer, then risk-shaped
-integration behavior.
-
-## Topology Boundary
-
-Logical planner-interface identity is stable across `e6-planner-interface` and
-`e6-query-engine/shared/planner-interface`. Split repositories remain
-authoritative until the user declares cutover. Compare exact IDL, scripts,
-manifests, and generated outputs before treating the monorepo copy as equivalent.
+Compilation proves less than consumer acceptance, and acceptance proves less
+than correct results. Validate the changed contract at its producer and consumer
+boundaries, with execution evidence when the claim depends on it. Expand into
+sibling `shared/workspace-services-thrift` or `shared/services-thrift` only when
+the changed IDL/build edge reaches them.

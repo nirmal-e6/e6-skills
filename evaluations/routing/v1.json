@@ -491,9 +491,9 @@
       ]
     },
     {
-      "id": "e6-context-positive-split-repo-topology",
+      "id": "e6-context-positive-monorepo-topology",
       "case_type": "positive",
-      "prompt": "Map the current E6 planner-to-executor contract using the split query-optimizer, planner-interface, Java executor, and native executor repositories. Do not read unrelated engine components or assume a complete architecture mirror.",
+      "prompt": "Map the current E6 planner-to-executor contract from the query-engine checkout, including planner-interface and the Java/native consumers. Do not read unrelated engine components or assume a complete architecture mirror.",
       "expected_routing": {
         "kind": "skill",
         "skill": "e6-query-engine-context"
@@ -503,14 +503,14 @@
       "expected_behavior_tags": [
         "bounded-context-expansion",
         "use-logical-component-identities",
-        "split-repos-authoritative-until-cutover",
+        "use-monorepo-source-of-truth",
         "stop-at-justified-boundary"
       ]
     },
     {
-      "id": "e6-context-positive-monorepo-equivalent",
+      "id": "e6-context-pressure-legacy-checkout-disagreement",
       "case_type": "positive",
-      "prompt": "Map the same planner-to-executor contract from an e6-query-engine checkout, but verify each monorepo component against the authoritative split source before relying on it and keep the reasoning independent of repository layout.",
+      "prompt": "An old query-optimizer checkout and the current query-engine worktree have different planner-interface lowering code. Which source should I use to trace the current planner-to-executor contract?",
       "expected_routing": {
         "kind": "skill",
         "skill": "e6-query-engine-context"
@@ -519,16 +519,59 @@
       "forbidden_skills": [],
       "expected_behavior_tags": [
         "bounded-context-expansion",
-        "use-logical-component-identities",
-        "revalidate-monorepo-copy",
-        "split-repos-authoritative-until-cutover"
+        "use-monorepo-source-of-truth",
+        "legacy-checkout-is-comparison-evidence",
+        "revalidate-current-code"
+      ]
+    },
+    {
+      "id": "e6-context-pressure-shared-definition-contract",
+      "case_type": "positive",
+      "prompt": "Explain how a materialized CTE definition is reached and reused by multiple references across E6 lowering, serialization, and Java/native construction. I need a bounded contract map before deciding whether a serialization change is safe.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "e6-query-engine-context"
+      },
+      "allowed_composing_skills": [],
+      "forbidden_skills": [
+        "e6-query-engine-coordination",
+        "calcite-optimization-or-rule-work"
       ],
-      "notes": "Topology-equivalent counterpart to e6-context-positive-split-repo-topology."
+      "expected_behavior_tags": [
+        "bounded-context-expansion",
+        "follow-definition-and-reference-edges",
+        "distinguish-definition-identity-and-reference-schema",
+        "trace-consumer-reuse-and-order",
+        "revalidate-current-code"
+      ],
+      "notes": "An ordinary tree walk is insufficient. Sharing needs evidence of definition identity, consumer lookup/construction order, and scope/reset; do not prescribe a new encoding or infer correctness from identical plan text."
+    },
+    {
+      "id": "e6-context-pressure-captured-state-and-unavailable-fork",
+      "case_type": "positive",
+      "prompt": "Explain which configuration and artifact boundaries affect decimal lowering in this E6 worktree. The Calcite submodule is uninitialized, the planner POM names a local artifact, prepared plans can be cached, and a runtime setting can change. Separate what current source proves from what remains unverified.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "e6-query-engine-context"
+      },
+      "allowed_composing_skills": [],
+      "forbidden_skills": [
+        "e6-query-engine-coordination",
+        "calcite-bug-root-cause"
+      ],
+      "expected_behavior_tags": [
+        "bounded-context-expansion",
+        "trace-write-read-and-capture-sites",
+        "check-cache-rebind-and-reset-boundaries",
+        "distinguish-declared-and-resolved-artifacts",
+        "mark-unavailable-source-unverified"
+      ],
+      "notes": "Source declarations do not establish the artifact loaded by a process or the settings captured by an existing plan. Do not substitute an old split checkout for missing pinned source or claim a runtime defect from source inspection alone."
     },
     {
       "id": "e6-context-negative-narrow-documentation",
       "case_type": "negative",
-      "prompt": "Correct punctuation in a query-optimizer Markdown paragraph. No code symbol, cross-component contract, semantic behavior, or broader engine explanation is involved.",
+      "prompt": "Correct punctuation in a components/planner Markdown paragraph. No code symbol, cross-component contract, semantic behavior, or broader engine explanation is involved.",
       "expected_routing": {
         "kind": "no-specialized-skill"
       },
@@ -549,7 +592,7 @@
     {
       "id": "e6-review-positive-qo-change",
       "case_type": "positive",
-      "prompt": "Review an existing query-optimizer PR for semantic regressions, wrong Calcite-versus-QO ownership, fallback behavior, and missing risk-shaped tests. Report findings only and recheck any author corrections.",
+      "prompt": "Review an existing query-engine planner PR for semantic regressions, wrong Calcite-versus-QO ownership, fallback behavior, and missing risk-shaped tests. Report findings only and recheck any author corrections.",
       "expected_routing": {
         "kind": "skill",
         "skill": "e6-query-engine-pr-review"
@@ -615,7 +658,63 @@
         "review-one-coherent-change-set",
         "map-changed-contract-consumers",
         "analyze-merge-dependencies",
-        "bounded-context-expansion"
+        "bounded-context-expansion",
+        "one-copy-ready-block-per-pr",
+        "group-findings-by-pr",
+        "keep-pr-blocks-self-contained",
+        "preserve-coherent-cross-pr-analysis"
+      ]
+    },
+    {
+      "id": "e6-review-positive-multi-repo-copy-ready-output",
+      "case_type": "positive",
+      "prompt": "Review paired e6-calcite and query-engine PRs as one feature, including their dependency and merge order. Return the final review as separate GitHub comments I can copy: one copy window for e6-calcite containing its findings and one for query-engine containing its findings.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "e6-query-engine-pr-review"
+      },
+      "allowed_composing_skills": [
+        "e6-query-engine-context"
+      ],
+      "forbidden_skills": [
+        "calcite-pr-intake",
+        "calcite-pr-handoff",
+        "e6-query-engine-coordination"
+      ],
+      "expected_behavior_tags": [
+        "review-one-coherent-change-set",
+        "one-copy-ready-block-per-pr",
+        "group-findings-by-pr",
+        "reset-numbering-per-pr",
+        "keep-pr-blocks-self-contained",
+        "place-cross-pr-asks-with-each-required-owner",
+        "no-review-prose-outside-copy-blocks"
+      ]
+    },
+    {
+      "id": "e6-review-positive-same-repo-multi-pr-copy-ready-output",
+      "case_type": "positive",
+      "prompt": "Review two dependent query-engine PRs in the same repository as one coherent change. Return a separate copy-ready GitHub comment for each PR, keep each comment self-contained, and put shared dependency findings in every PR that must act on them.",
+      "expected_routing": {
+        "kind": "skill",
+        "skill": "e6-query-engine-pr-review"
+      },
+      "allowed_composing_skills": [
+        "e6-query-engine-context"
+      ],
+      "forbidden_skills": [
+        "calcite-pr-intake",
+        "calcite-pr-handoff",
+        "e6-query-engine-coordination"
+      ],
+      "expected_behavior_tags": [
+        "review-one-coherent-change-set",
+        "one-copy-ready-block-per-pr",
+        "do-not-collapse-prs-by-repository",
+        "reset-numbering-per-pr",
+        "keep-pr-blocks-self-contained",
+        "place-cross-pr-asks-with-each-required-owner",
+        "no-review-prose-outside-copy-blocks"
       ]
     },
     {
@@ -642,7 +741,7 @@
     {
       "id": "e6-review-negative-narrow-implementation",
       "case_type": "negative",
-      "prompt": "Implement an already-designed local query-optimizer helper rename and run its focused tests. No review, semantic investigation, cross-component contract, or readiness audit was requested.",
+      "prompt": "Implement an already-designed local components/planner helper rename and run its focused tests. No review, semantic investigation, cross-component contract, or readiness audit was requested.",
       "expected_routing": {
         "kind": "no-specialized-skill"
       },
@@ -801,7 +900,7 @@
     {
       "id": "e6-optimization-positive-product-owned-bad-plan",
       "case_type": "positive",
-      "prompt": "Evidence shows a bad plan is caused by E6 query-optimizer metadata policy and rule ordering, not a generic Calcite defect. Compare the strongest existing Calcite and QO baseline, define the preserved invariant, and justify executor-visible benefit before designing a change.",
+      "prompt": "Evidence shows a bad plan is caused by E6 planner metadata policy and rule ordering, not a generic Calcite defect. Compare the strongest existing Calcite and QO baseline, define the preserved invariant, and justify executor-visible benefit before designing a change.",
       "expected_routing": {
         "kind": "skill",
         "skill": "e6-query-engine-optimization"
@@ -924,9 +1023,9 @@
       ]
     },
     {
-      "id": "e6-coordination-positive-split-monorepo-migration",
+      "id": "e6-coordination-positive-submodule-integration",
       "case_type": "positive",
-      "prompt": "Coordinate a bounded multi-session move of one query-engine contract from split repositories toward the monorepo. Reinventory current behavior and consumers, keep split sources authoritative until explicit cutover, and reconcile original, mirrored, validated, deferred, and removed dispositions.",
+      "prompt": "Coordinate a bounded multi-session Calcite-backed planner change across the shared/e6-calcite submodule and its planner and planner-interface consumers. Reinventory current behavior, reconcile the submodule artifact and consumer dependencies, and close only after ordered evidence gates pass.",
       "expected_routing": {
         "kind": "skill",
         "skill": "e6-query-engine-coordination"
@@ -937,8 +1036,8 @@
       "forbidden_skills": [],
       "expected_behavior_tags": [
         "fresh-behavior-unit-inventory",
-        "split-repos-authoritative-until-cutover",
-        "preserve-topology-invariance",
+        "reconcile-submodule-and-consumers",
+        "preserve-contract-invariance",
         "dependency-gates",
         "record-contradictions-and-residual-risk"
       ]

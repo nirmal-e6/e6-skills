@@ -23,7 +23,7 @@ a trigger; dependent work and reconciliation are required.
 
 - Observable terminal state, non-goals, and allowed mutation scope
 - Fresh inventory of behavior units, not a historical example list
-- Logical component authority and split/monorepo source status
+- Logical component authority and component/submodule source status
 - Dependency, artifact, consumer, and validation relationships
 - Current dispositions, claims, contradictions, and unavailable evidence
 

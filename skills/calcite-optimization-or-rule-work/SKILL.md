@@ -27,10 +27,12 @@ Define the planner contract before changing a rule or planner-owned behavior.
 2. Identify the owning planner layer or rule family.
 3. Define the transformation contract:
    - preconditions
-   - preserved semantics
+   - preserved semantics, including relevant NULL/three-valued logic,
+     multiplicity, empty-input, and value-identity obligations
    - expected new plan shape or behavior
-4. Enumerate direct interaction risks with nearby rules, traits, or costing
-   assumptions.
+4. Challenge preconditions with counterexamples or proof by contradiction,
+   then explain the surviving equivalence argument; absence of a counterexample
+   alone is not proof. Audit nearby rules, traits, and costing interactions.
 5. Update the issue brief with the planner contract, risks, and explicit
    non-goals.
 6. Pair with `calcite-change-impact-map` before implementation to catch
@@ -42,4 +44,7 @@ Define the planner contract before changing a rule or planner-owned behavior.
 - Owning planner or rule layer
 - Overlap or interaction risk notes
 - Implement versus refine versus escalate decision
-- Focused positive and negative tests
+- Focused positive, guard-negative, and interaction tests using standard
+  Calcite fixtures and mock/TPC schemas. Keep the harness simple for complex
+  cases too: readable before/after and unchanged-plan checks, with focused
+  result-equivalence assertions where plans cannot establish semantics.
